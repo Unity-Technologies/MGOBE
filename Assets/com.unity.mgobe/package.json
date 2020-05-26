@@ -1,0 +1,10 @@
+{
+	"name": "com.unity.mgobe",
+	"displayName": "Mgobe",
+	"version": "0.0.1-preview",
+	"unity": "2018.1",
+	"description": "",
+	"keywords": ["todo"],
+	"dependencies": {
+	}
+}

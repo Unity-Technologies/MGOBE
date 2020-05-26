@@ -1,0 +1,6 @@
+{
+  "name": "com.unity.mgobe.runtime",
+  "references": [
+  ],
+  "allowUnsafeCode": false
+}

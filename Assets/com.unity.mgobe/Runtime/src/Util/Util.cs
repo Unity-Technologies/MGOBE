@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+using CloudBase;
+
+namespace Packages.com.unity.mgobe.Runtime.src.Util {
+    public static class SdkUtil {
+        private static int _seqNum = 1;
+        public static string GetSequenceStr () {
+            var seqStr = _seqNum.GetHashCode ().ToString ();
+            _seqNum++;
+
+            if (_seqNum >= int.MaxValue) {
+                _seqNum = 1;
+            }
+
+            return seqStr;
+        }
+
+        public static void PrintBytes (IEnumerable<byte> data) {
+            var str = data.Aggregate ("", (current, t) => current + (t.ToString ("x02") + " "));
+            Debugger.Log (str);
+        }
+
+        public static int ErrCodeConvert (int code) {
+            return code < 0 ? ErrCode.EcInnerError : code;
+        }
+
+        public static string ErrCodeConvert (int code, string msg) {
+            return code < 0 ? string.Format ("服务器内部错误[{0]", msg) : msg;
+        }
+        public static long GetCurrentTimeSeconds () {
+            return (long)((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds);
+        }
+
+        public static long GetCurrentTimeMilliseconds () {
+            long retval = 0;
+            var st = new DateTime (1970, 1, 1);
+            TimeSpan t = (DateTime.Now.ToUniversalTime () - st);
+            retval = Convert.ToInt64(t.TotalMilliseconds + 0.5);
+            return retval;
+        }
+
+       async public static void UploadMgobeUserInfo (string gameId) {
+            CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
+            AuthState state = await app.Auth.GetAuthStateAsync ();
+            if (state == null) {
+                // 匿名登录
+                state = await app.Auth.SignInAnonymouslyAsync ();
+            }
+            // 调用云函数
+            FunctionResponse res = await app.Function.CallFunctionAsync ("uploadUserInfo", new Dictionary<string, dynamic> {{ "gameId", gameId}});
+        }
+
+    }
+}
