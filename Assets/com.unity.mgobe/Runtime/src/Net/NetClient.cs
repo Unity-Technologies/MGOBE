@@ -5,68 +5,58 @@ using Lagame;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net
-{
-    public class NetClient : Net
+namespace Packages.com.unity.mgobe.Runtime.src.Net {
+    public class NetClient : Net 
     {
 
-        private readonly int _maxDataLength = Convert.ToInt32(Math.Pow(2, 12));
+        private readonly int _maxDataLength = Convert.ToInt32 (Math.Pow (2, 12));
         private readonly Responses _responses;
         private static Dictionary<int, Action<byte[]>> _requestMap;
 
-        public static void InitRequestMap()
-        {
-            _requestMap.Add((int)ClientSendServerReqWrap2Cmd.ECmdLoginReq, (byte[] data) =>
-            {
+        public static void InitRequestMap () {
+            _requestMap.Add ((int) ClientSendServerReqWrap2Cmd.ECmdLoginReq, (byte[] data) => {
 
             });
         }
-        public NetClient(Responses responses)
-        {
+        public NetClient (Responses responses) {
             this._responses = responses;
         }
 
         // 发送消息请求
-        public string SendRequest(ByteString body, int subcmd, NetResponseCallback response, Action<ResponseEvent> callback, string cmd, string seq)
-        {
-            if (seq.Length == 0)
-            {
-                seq = Guid.NewGuid().ToString();
-                var sendQueueVal = new SendQueueValue
-                {
+        public string SendRequest (ByteString body, int subcmd, NetResponseCallback response, Action<ResponseEvent> callback, string cmd, string seq) {
+            if (seq.Length == 0) {
+                seq = Guid.NewGuid ().ToString ();
+                var sendQueueVal = new SendQueueValue {
                     Time = DateTime.Now,
-                    IsSocketSend = false,
-                    Cmd = (int) subcmd,
-                    resend = () => this.SendRequest(body, subcmd, response, callback, cmd, seq),
-                    response = msg =>
-                    {
-                        response(true, msg, callback);
-                        DeleteSendQueue(seq);
-                    }
+                        IsSocketSend = false,
+                        Cmd = (int) subcmd,
+                        resend = () => this.SendRequest (body, subcmd, response, callback, cmd, seq),
+                        response = msg => {
+                            response (true, msg, callback);
+                            DeleteSendQueue (seq);
+                        }
                 };
-                sendQueueVal.sendSuccess = () =>
-                {
+                sendQueueVal.sendSuccess = () => {
+                    if(Socket.Id == 1) Debugger.Log("handle send success {0}", seq);
                     sendQueueVal.IsSocketSend = true;
                 };
-                sendQueueVal.remove = () =>
-                {
-                    DeleteSendQueue(seq);
+                sendQueueVal.remove = () => {
+                    DeleteSendQueue (seq);
                 };
-                sendQueueVal.sendFail = (errCode, errMsg) =>
-                {
+                sendQueueVal.sendFail = (errCode, errMsg) => {
                     var errMessage = "消息发送失败，" + errMsg + "[" + errCode + "]";
                     var rspWrap1 = new ClientSendServerRspWrap1 {
-                            Seq = seq,
-                            Body = null,
-                            ErrCode = errCode,
-                            ErrMsg = errMessage
+                        Seq = seq,
+                        Body = null,
+                        ErrCode = errCode,
+                        ErrMsg = errMessage
                     };
-                    response(false, new DecodeRspResult {
+                    response (false, new DecodeRspResult {
                         RspWrap1 = rspWrap1
-                    },callback);
-                    DeleteSendQueue(seq);
+                    }, callback);
+                    DeleteSendQueue (seq);
                 };
-                AddSendQueue(seq, sendQueueVal);
+                AddSendQueue (seq, sendQueueVal);
             }
 
             // PB request = new PB();
@@ -86,119 +76,107 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net
                 Cmd = cmd,
                 Seq = seq
             };
-            var accessReq = new ClientSendServerReqWrap2();
-            accessReq.Cmd = (ProtoCmd)subcmd;
-            var data = Pb.EncodeReq(qAppRequest, accessReq, body);
+            var accessReq = new ClientSendServerReqWrap2 ();
+            accessReq.Cmd = (ProtoCmd) subcmd;
+            var data = Pb.EncodeReq (qAppRequest, accessReq, body);
 
-            if (data.Length > _maxDataLength)
-            {
+            if (data.Length > _maxDataLength) {
                 var val = SendQueue[seq];
-                val.sendFail((int)QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
+                val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
                 return seq;
             }
 
-            var reqData = BuildData(data);
-            // Console.WriteLine("NetClient buildData: {0}", reqData.Length);
-            // SDKUtil.PrintBytes(reqData);
+            var reqData = BuildData (data);
 
-            return this.Send(reqData, seq, (ProtoCmd)subcmd);
+            return this.Send (reqData, seq, (ProtoCmd) subcmd);
         }
 
-        private static byte[] BuildData(byte[] data)
-        {
-            return BuildData((byte)MessageDataTag.ClientPre, data, (byte)MessageDataTag.ClientEnd);
+        private static byte[] BuildData (byte[] data) {
+            return BuildData ((byte) MessageDataTag.ClientPre, data, (byte) MessageDataTag.ClientEnd);
         }
 
         // 接收响应并处理
-        public void HandleMessage(byte[] body)
-        {
-            // SDKUtil.PrintBytes(body);
+        public void HandleMessage (byte[] body) {
+            try {
+                var rsp = Pb.DecodeRsp (body);
+                var seq = rsp.RspWrap1.Seq;
 
-            var rsp = Pb.DecodeRsp(body);
-            var seq = rsp.RspWrap1.Seq;
-            
-            var val = SendQueue.ContainsKey(seq) ? SendQueue[seq] : null;
+                var val = SendQueue.ContainsKey (seq) ? SendQueue[seq] : null;
 
-            var callback = val?.response;
+                var callback = val?.response;
 
-            if (val == null) return;
-            // 处理错误码，并拦截 value.response
+                if (val == null) return;
+                // 处理错误码，并拦截 value.response
 
-            // 心跳不拦截
-            if (val.Cmd != (int)ProtoCmd.ECmdHeartBeatReq && HandleErrCode(rsp.RspWrap1))
-            {
+                if (Socket.Id == 1) Debugger.Log ("handle Message {0} {1}", val.Cmd, rsp.RspWrap1.ErrCode);
+
+                // 心跳不拦截
+                if (val.Cmd != (int) ProtoCmd.ECmdHeartBeatReq && HandleErrCode (rsp.RspWrap1)) {
+                    return;
+                }
+
+                callback?.Invoke (rsp);
                 return;
+            } catch (Exception e) {
+                Debugger.Log (e.ToString ());
             }
-
-            callback?.Invoke(rsp);
-            return;
         }
 
         // 处理登录失败
-        private void HandleTokenErr()
-        {
+        private void HandleTokenErr () {
             // 重登录
-            UserStatus.SetStatus(UserStatus.StatusType.Logout);
-            this.Socket.Emit("autoAuth", null);
+            UserStatus.SetStatus (UserStatus.StatusType.Logout);
+            this.Socket.Emit ("autoAuth", null);
         }
 
         // 处理checklogin connect失败
-        private void HandleRelayConnectErr()
-        {
+        private void HandleRelayConnectErr () {
             // 重checklogin
-            CheckLoginStatus.SetStatus(CheckLoginStatus.StatusType.Offline);
-            this.Socket.Emit("autoAuth", null);
+            CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
+            this.Socket.Emit ("autoAuth", null);
 
         }
 
         // 处理异常错误码
         // 返回 true 会拦截 responses 回调
-        private bool HandleErrCode(ClientSendServerRspWrap1 res)
-        {
-            if (IsTokenError(res.ErrCode))
-            {
-                this.HandleTokenErr();
-                Debugger.Log("TOKEN_ERROR", res);
+        private bool HandleErrCode (ClientSendServerRspWrap1 res) {
+            if (IsTokenError (res.ErrCode)) {
+                this.HandleTokenErr ();
+                Debugger.Log ("TOKEN_ERROR", res);
                 return true;
             }
 
-            if (IsRelayConnectError(res.ErrCode) && this.Socket.Id == (int)ConnectionType.Relay)
-            {
-                this.HandleRelayConnectErr();
-                Debugger.Log("RELAY_CONNECT_ERROR", res);
+            if (IsRelayConnectError (res.ErrCode) && this.Socket.Id == (int) ConnectionType.Relay) {
+                this.HandleRelayConnectErr ();
+                Debugger.Log ("RELAY_CONNECT_ERROR", res);
                 return true;
             }
 
-            if (res.ErrCode != ErrCode.EcOk)
-            {
-                this._responses.Error(null);
+            if (res.ErrCode != ErrCode.EcOk) {
+                this._responses.Error (null);
             }
 
             return false;
         }
 
-        private static bool IsTokenError(int errCode)
-        {
+        private static bool IsTokenError (int errCode) {
             var res = errCode == ErrCode.EcAccessCmdGetTokenErr ||
-                       errCode == ErrCode.EcAccessCmdTokenPreExpire ||
-                       errCode == ErrCode.EcAccessCmdInvalidToken ||
-                       errCode == ErrCode.EcAccessGetCommConnectErr;
+                errCode == ErrCode.EcAccessCmdTokenPreExpire ||
+                errCode == ErrCode.EcAccessCmdInvalidToken ||
+                errCode == ErrCode.EcAccessGetCommConnectErr;
 
             return res;
         }
 
-        private static bool IsRelayConnectError(int errCode)
-        {
+        private static bool IsRelayConnectError (int errCode) {
             var res = errCode == ErrCode.EcAccessGetRelayConnectErr;
             return res;
         }
 
         // 如果返回码正确
-        public static void HandleSuccess(int code, Action callback)
-        {
-            if (code == (int)QAppProtoErrCode.EcOk)
-            {
-                callback();
+        public static void HandleSuccess (int code, Action callback) {
+            if (code == (int) QAppProtoErrCode.EcOk) {
+                callback ();
             }
         }
     }

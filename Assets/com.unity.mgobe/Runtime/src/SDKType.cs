@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using Google.Protobuf.Collections;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 
-
 namespace Lagame {
     /** Properties of a Frame. */
-    [Serializable]    
+    [Serializable]
     public partial class Frame {
         public string RoomId { get; set; }
         public long Time { get; set; }
@@ -15,7 +14,7 @@ namespace Lagame {
             RoomId = id;
             Ext.Seed = frame.Ext.Seed;
             Id = frame.Id;
-            Items.AddRange(frame.Items);
+            Items.AddRange (frame.Items);
             Time = 0;
             IsReplay = false;
         }
@@ -71,39 +70,35 @@ namespace Lagame {
     /** 队伍信息meta *
     /** Properties of a RoomInfo. */
     public partial class RoomInfo {
-        public static RoomInfo CreateInstance(RoomInfo roomInfo)
-        {
-            var _roomInfo = new RoomInfo
-            {
+        public static RoomInfo CreateInstance (RoomInfo roomInfo) {
+            var _roomInfo = new RoomInfo {
                 Id = roomInfo.Id,
                 Name = roomInfo.Name,
                 Type = roomInfo.Type,
-                CreateType = roomInfo.CreateType == CreateRoomType.CommonCreate
-                    ? CreateRoomType.CommonCreate
-                    : CreateRoomType.MatchCreate,
+                CreateType = roomInfo.CreateType == CreateRoomType.CommonCreate ?
+                CreateRoomType.CommonCreate :
+                CreateRoomType.MatchCreate,
                 MaxPlayers = roomInfo.MaxPlayers,
                 Owner = roomInfo.Owner,
                 IsPrivate = roomInfo.IsPrivate,
                 CustomProperties = roomInfo.CustomProperties,
-                FrameSyncState = roomInfo.FrameSyncState == FrameSyncState.Start
-                    ? FrameSyncState.Start
-                    : FrameSyncState.Stop,
+                FrameSyncState = roomInfo.FrameSyncState == FrameSyncState.Start ?
+                FrameSyncState.Start :
+                FrameSyncState.Stop,
                 FrameRate = roomInfo.FrameRate,
                 RouteId = roomInfo.RouteId,
                 CreateTime = roomInfo.CreateTime,
                 StartGameTime = roomInfo.StartGameTime,
                 IsForbidJoin = roomInfo.IsForbidJoin
             };
-            foreach (var info in roomInfo.PlayerList)
-            {
-                var playerInfo = new PlayerInfo(info);
-                _roomInfo.PlayerList.Add(playerInfo);
+            foreach (var info in roomInfo.PlayerList) {
+                var playerInfo = new PlayerInfo (info);
+                _roomInfo.PlayerList.Add (playerInfo);
             }
 
-            foreach (var info in roomInfo.TeamList)
-            {
-                var teamInfo = new TeamInfo(info);
-                _roomInfo.TeamList.Add(teamInfo);
+            foreach (var info in roomInfo.TeamList) {
+                var teamInfo = new TeamInfo (info);
+                _roomInfo.TeamList.Add (teamInfo);
             }
 
             return _roomInfo;
@@ -262,7 +257,6 @@ namespace Lagame {
 
         public string TeamId { get; set; }
 
-        public string RoomId { get; set; }
     }
 
     public class ChangeRoomPara {
@@ -308,8 +302,7 @@ namespace Lagame {
         public string MatchCode { get; set; }
 
         /** 匹配的玩家信息 */
-        public MatchPlayerInfoPara PlayerInfoPara
-        {
+        public MatchPlayerInfoPara PlayerInfoPara {
             get => playerInfoPara;
             set => playerInfoPara = value;
         }
@@ -358,27 +351,12 @@ namespace Lagame {
     }
 
     public partial class RecvFrameBst {
-        public RecvFrameBst(Frame frame, string id) {
-            Frame = new Frame(frame, id);
+        public RecvFrameBst (Frame frame, string id) {
+            Frame = new Frame (frame, id);
         }
     }
 
     public class CancelPlayerMatchPara {
-        public MatchType Type {
-            get {
-                switch (MatchType) {
-                    case MatchType.PlayerSimple:
-                        return MatchType.PlayerSimple;
-                    case MatchType.RoomSimple:
-                        return MatchType.RoomSimple;
-                    case MatchType.PlayerComplex:
-                        return MatchType.PlayerComplex;
-                    default:
-                        return MatchType.PlayerSimple;
-                }
-            }
-        }
-
         public MatchType MatchType { get; set; }
     }
 

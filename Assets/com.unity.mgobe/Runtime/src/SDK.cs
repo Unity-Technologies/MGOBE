@@ -341,7 +341,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         // 取消匹配
         public static void CancelMatch (CancelPlayerMatchPara para, Action<ResponseEvent> callback) {
             var req = new CancelPlayerMatchReq {
-                MatchType = para.Type
+                MatchType = para.MatchType
             };
             Core.Matcher.CancelMatch (req.ToByteString (), callback);
         }
@@ -350,7 +350,10 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         /// 获取房间列表
         /// </summary>
         public static void GetRoomList (GetRoomListPara getRoomListPara, Action<ResponseEvent> callback) {
-
+            if (getRoomListPara.PageNo < 0 || getRoomListPara.PageSize < 0) {
+                callback?.Invoke (new ResponseEvent (ErrCode.EcParamsInvalid, "参数错误，请确认", "", null));
+                return;
+            }
             var para = new GetRoomListReq {
                 GameId = GameInfo.GameId,
                 PageNo = getRoomListPara.PageNo,
@@ -458,11 +461,11 @@ namespace Packages.com.unity.mgobe.Runtime.src {
                 RoomId = roomInfo.Id,
                 Item = new FrameItem {
                 PlayerId = RequestHeader.PlayerId,
-                Data = para.Data.ToString(),
+                Data = para.Data.ToString (),
                 Timestamp = (ulong) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds)
                 }
             };
-            Debugger.Log ("sendframe: {0}", para.Data);
+            Debugger.Log("send frame length: {0}", req.Item.Data.Length);
             _frameSender.SendFrame (req, callback);
         }
 

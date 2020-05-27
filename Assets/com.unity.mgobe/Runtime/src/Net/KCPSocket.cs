@@ -39,7 +39,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
 
         public override void Connect () {
-            // Debugger.Log ("wss connect {0}", _url);
             _socket = new WebSocket (_url);
 
             _socket.OnMessage += OnMessage;
@@ -53,9 +52,12 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
         public override void Send (byte[] data, Action<int> fail, Action success) {
             try {
+                Debugger.Log ("data length {0}", data.Length);
                 _socket.Send (data);
+                Debugger.Log ("data length send {0}", data.Length);
                 success?.Invoke ();
             } catch (Exception e) {
+                Debugger.Log ("send error {0}", e, ToString ());
                 fail?.Invoke (0);
             }
         }
@@ -71,12 +73,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 Data = data
             };
             onMessage (eve);
-            // handler(data, bytesRead);
             return;
         }
 
         private void OnOpen (object sender, EventArgs e) {
-            // Debugger.Log("ws open.");
             ReadyState = Open;
             base.onOpen ();
         }
@@ -91,7 +91,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 Msg = e.Message
             };
             base.onError (eve);
-            // PushError(e.Exception);
         }
 
         public override void Close (Action success, Action fail) {
@@ -116,7 +115,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         private class SocketStateObject {
             public KcpClient udpClient = null;
             public IPEndPoint endPoint = null;
-            private const int BufferSize = 256;
+            private const int BufferSize = 1024;
             public byte[] buffer = new byte[BufferSize];
         }
 
@@ -164,7 +163,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
         public override void Connect () {
             try {
-                Debugger.Log("socket2 begin connect");
+                Debugger.Log ("socket2 begin connect");
                 ReadyState = Connecting;
                 var state = new SocketStateObject { udpClient = _udpClient, endPoint = _endPoint };
 

@@ -260,6 +260,9 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net
             }
             else
             {
+                if(data.Length > 1000) {
+                    Debugger.Log("data send: {0}", seq);
+                }
                 Socket.Send(data,
                     (code) => HandleSendFail(seq, code),
                     () => HandleSendSuccess(seq)

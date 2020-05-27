@@ -232,7 +232,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Room
 
         private void OnChangePlayerNetworkState(DecodeBstResult bst, string seq)
         {
-            Debugger.Log("onChangePlayerNetworkState bst: {0}", seq);
+            // Debugger.Log("onChangePlayerNetworkState bst: {0}", seq);
             var eve = new BroadcastEvent(bst.Body, seq);
             this.responses.OnChangePlayerNetworkState(eve);
         }

@@ -84,7 +84,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
         ///////////////////////////////// 请求 //////////////////////////////////
         // 帧同步开始
         public string StartFrameSync (StartFrameSyncReq para, Action<ResponseEvent> callback) {
-            if (this.RoomInfo == null ||  string.IsNullOrEmpty(this.RoomInfo.Id)) {
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
                 ErrMsg = "无房间信息"
@@ -102,8 +102,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
         }
         // 帧同步停止
         public string StopFrameSync (StopFrameSyncReq para, Action<ResponseEvent> callback) {
-            Debugger.Log("stop frame sync {0}", this.RoomInfo == null);
-            if (this.RoomInfo == null || string.IsNullOrEmpty(this.RoomInfo?.Id)) {
+            Debugger.Log ("stop frame sync {0}", this.RoomInfo == null);
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo?.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
                 ErrMsg = "无房间信息"
@@ -122,7 +122,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
         }
         // 发送帧同步信息
         public string SendFrame (SendFrameReq para, Action<ResponseEvent> callback) {
-            if (this.RoomInfo == null ||  string.IsNullOrEmpty(this.RoomInfo.Id)) {
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
                 ErrMsg = "无房间信息"
@@ -136,13 +136,13 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
             var response = new NetResponseCallback (this.SendFrameResponse);
             const int subcmd = (int) ProtoCmd.ECmdRelaySendFrameReq;
             var seq = this.NetUtil2.Send (para.ToByteString (), subcmd, response, callback);
-            // Debugger.Log("SENDFRAME_Para {0} {1}", para, seq);
+            Debugger.Log("SENDFRAME_Para {0} {1}", para, seq);
             return seq;
         }
 
         // 请求补帧
         public string RequestFrame (RequestFrameReq para, Action<ResponseEvent> callback) {
-            if (this.RoomInfo == null ||  string.IsNullOrEmpty(this.RoomInfo.Id)) {
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
                 ErrMsg = "无房间信息"
@@ -162,7 +162,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
 
         // 确认登录
         public string CheckLogin (Action<ResponseEvent> callback, string tag) {
-            if (this.RoomInfo == null ||  string.IsNullOrEmpty(this.RoomInfo.Id)) {
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo.Id)) {
                 Debugger.Log ("无房间信息");
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                     ErrCode = ErrCode.EcSdkNoRoom,
@@ -189,7 +189,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
 
         // 发送自定义服务消息
         public string SendMessageExt (SendToGameSvrReq para, Action<ResponseEvent> callback) {
-            if (this.RoomInfo == null ||  string.IsNullOrEmpty(this.RoomInfo.Id)) {
+            if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
                 ErrMsg = "无房间信息"
@@ -261,7 +261,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
         private void OnRecvFrame (DecodeBstResult bstResult, string seq) {
             var bst = new RecvFrameBst ();
             bst.MergeFrom (bstResult.Body);
-            bst.Frame.RoomId = this.GetFrameRoom().Id;
+            bst.Frame.RoomId = this.GetFrameRoom ().Id;
             var eve = new BroadcastEvent (bst, seq);
 
             // 用户数据上传

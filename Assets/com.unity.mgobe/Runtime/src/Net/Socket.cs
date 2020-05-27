@@ -74,6 +74,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 ReconnectTimer.Close ();
                 ForceClose = false;
 
+                Debugger.Log("is using UDP: {0} {1}", _enableUdp && Config.EnableUdp, Id);
                 if (_enableUdp && Config.EnableUdp) {
                     this._socketTask = new KcpSocket (Url, _enableUdp);
                 } else {
@@ -217,9 +218,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
             public void Emit (string tag, SocketEvent socketEvent) {
                 socketEvent.Tag = tag;
-                // Console.WriteLine("Handle emit. {0}", tag);
                 foreach (var key in _eventHandlers.Keys.Where (key => key.Equals(tag) || key.Equals("*"))) {
-                    // Debugger.Log("Emit handler");
                     _eventHandlers[key].Invoke(socketEvent);
                 };
 

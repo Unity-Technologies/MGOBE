@@ -346,7 +346,14 @@ namespace Packages.com.unity.mgobe.Runtime.src.SDK {
 
         public void SendFrame (SendFramePara para, Action<ResponseEvent> callback) {
             this.RoomUtil.ActiveFrame ();
-            Sdk.Instance.SendFrame (para, callback);
+            Sdk.Instance.SendFrame (para, (eve) => {
+                if (eve.Data != null) {
+                    var rsp = new SendFrameRsp ();
+                    rsp.MergeFrom ((ByteString) eve.Data);
+                    eve.Data = rsp;
+                }
+                callback?.Invoke (eve);
+            });
         }
 
         /**
@@ -370,7 +377,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.SDK {
                         var frame = new Frame {
                             Id = item.Id,
                             Ext = item.Ext,
-                            Time = Convert.ToInt64((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds),
+                            Time = Convert.ToInt64 ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds),
                             RoomId = RoomInfo.Id,
                             IsReplay = true
                         };
