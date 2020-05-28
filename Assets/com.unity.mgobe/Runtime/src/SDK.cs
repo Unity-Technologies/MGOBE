@@ -441,7 +441,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         // 禁止帧同步
         public void StopFrameSync (Action<ResponseEvent> callback) {
             if (_frameSender.RoomInfo == null) {
-                callback?.Invoke (new ResponseEvent (ErrCode.EcSdkNoRoom, "未找到帧同步房间，请确认", "", null));
+                callback?.Invoke (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom, "未找到帧同步房间，请确认", "", null));
                 return;
             }
             var roomInfo = _frameSender.RoomInfo;

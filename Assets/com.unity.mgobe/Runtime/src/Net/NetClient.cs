@@ -6,8 +6,7 @@ using Packages.com.unity.mgobe.Runtime.src.Util;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
 namespace Packages.com.unity.mgobe.Runtime.src.Net {
-    public class NetClient : Net 
-    {
+    public class NetClient : Net {
 
         private readonly int _maxDataLength = Convert.ToInt32 (Math.Pow (2, 12));
         private readonly Responses _responses;
@@ -37,7 +36,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                         }
                 };
                 sendQueueVal.sendSuccess = () => {
-                    if(Socket.Id == 1) Debugger.Log("handle send success {0}", seq);
+                    // if(Socket.Id == 1) Debugger.Log("handle send success {0}", seq);
                     sendQueueVal.IsSocketSend = true;
                 };
                 sendQueueVal.remove = () => {
@@ -47,12 +46,11 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                     var errMessage = "消息发送失败，" + errMsg + "[" + errCode + "]";
                     var rspWrap1 = new ClientSendServerRspWrap1 {
                         Seq = seq,
-                        Body = null,
                         ErrCode = errCode,
                         ErrMsg = errMessage
                     };
                     response (false, new DecodeRspResult {
-                        RspWrap1 = rspWrap1
+                        RspWrap1 = rspWrap1,
                     }, callback);
                     DeleteSendQueue (seq);
                 };
@@ -81,8 +79,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             var data = Pb.EncodeReq (qAppRequest, accessReq, body);
 
             if (data.Length > _maxDataLength) {
-                var val = SendQueue[seq];
-                val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
+                var val = SendQueue.ContainsKey (seq) ? SendQueue[seq] : null;
+                if (val != null) val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
                 return seq;
             }
 
@@ -108,7 +106,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 if (val == null) return;
                 // 处理错误码，并拦截 value.response
 
-                if (Socket.Id == 1) Debugger.Log ("handle Message {0} {1}", val.Cmd, rsp.RspWrap1.ErrCode);
+                // if (Socket.Id == 1) Debugger.Log ("handle Message {0} {1}", val.Cmd, rsp.RspWrap1.ErrCode);
 
                 // 心跳不拦截
                 if (val.Cmd != (int) ProtoCmd.ECmdHeartBeatReq && HandleErrCode (rsp.RspWrap1)) {

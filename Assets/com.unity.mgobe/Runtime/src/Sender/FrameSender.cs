@@ -102,7 +102,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
         }
         // 帧同步停止
         public string StopFrameSync (StopFrameSyncReq para, Action<ResponseEvent> callback) {
-            Debugger.Log ("stop frame sync {0}", this.RoomInfo == null);
             if (this.RoomInfo == null || string.IsNullOrEmpty (this.RoomInfo?.Id)) {
                 var rspWrap1 = new ClientSendServerRspWrap1 {
                 ErrCode = ErrCode.EcSdkNoRoom,
@@ -135,9 +134,16 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
 
             var response = new NetResponseCallback (this.SendFrameResponse);
             const int subcmd = (int) ProtoCmd.ECmdRelaySendFrameReq;
-            var seq = this.NetUtil2.Send (para.ToByteString (), subcmd, response, callback);
-            Debugger.Log("SENDFRAME_Para {0} {1}", para, seq);
-            return seq;
+            try {
+                var data = para.ToByteString();
+                var seq = this.NetUtil2.Send (data, subcmd, response, callback);
+                Debugger.Log ("SENDFRAME_Para {0} {1}", para, seq);
+                return seq;
+            } catch (System.Exception e) {
+                Debugger.Log("Error: {0}", e.ToString());
+                throw;
+            }
+
         }
 
         // 请求补帧
@@ -280,7 +286,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
 
         // 开始游戏
         private void OnStartFrameSync (DecodeBstResult res, string seq) {
-            Debugger.Log ("onChangeUserState bst: {0}", seq);
             var eve = new BroadcastEvent (res.Body, seq);
             FrameBst.Clear ();
             this._responses.OnStartFrameSync (eve);

@@ -74,7 +74,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 ReconnectTimer.Close ();
                 ForceClose = false;
 
-                Debugger.Log("is using UDP: {0} {1}", _enableUdp && Config.EnableUdp, Id);
                 if (_enableUdp && Config.EnableUdp) {
                     this._socketTask = new KcpSocket (Url, _enableUdp);
                 } else {

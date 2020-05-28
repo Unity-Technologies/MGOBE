@@ -52,12 +52,11 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
         public override void Send (byte[] data, Action<int> fail, Action success) {
             try {
-                Debugger.Log ("data length {0}", data.Length);
                 _socket.Send (data);
-                Debugger.Log ("data length send {0}", data.Length);
+                // Debugger.Log ("data length send {0}", data.Length);
                 success?.Invoke ();
             } catch (Exception e) {
-                Debugger.Log ("send error {0}", e, ToString ());
+                // Debugger.Log ("send error {0}", e, ToString ());
                 fail?.Invoke (0);
             }
         }
@@ -82,6 +81,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
 
         private void OnClose (object sender, CloseEventArgs e) {
+            // Debugger.Log("ws socket close {0} {1}", e.Code, e.Reason);
             ReadyState = Closed;
             base.onClose ();
         }
@@ -90,6 +90,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             var eve = new SocketEvent {
                 Msg = e.Message
             };
+            // Debugger.Log("ws socket error {0} {1}", e.ToString(), e.Message);
+            
             base.onError (eve);
         }
 
