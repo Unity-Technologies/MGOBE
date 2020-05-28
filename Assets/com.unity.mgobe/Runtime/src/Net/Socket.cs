@@ -216,7 +216,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             }
 
             public void Emit (string tag, SocketEvent socketEvent) {
-                socketEvent.Tag = tag;
+                if(socketEvent != null) socketEvent.Tag = tag;
                 foreach (var key in _eventHandlers.Keys.Where (key => key.Equals(tag) || key.Equals("*"))) {
                     _eventHandlers[key].Invoke(socketEvent);
                 };
