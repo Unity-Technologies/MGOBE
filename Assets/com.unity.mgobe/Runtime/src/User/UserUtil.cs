@@ -61,7 +61,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.User
             {
                 if (data.SdkConfig.PingInterval != 0) pingInterval = (int)data.SdkConfig.PingInterval;
                 if (data.SdkConfig.ReportInterval != 0) reportInterval = (int)data.SdkConfig.ReportInterval;
-                // enableUdp = data.SdkConfig.EnableUdp;
+                enableUdp = data.SdkConfig.EnableUdp;
                 if (data.SdkConfig.ServerTime != 0) serverTime = data.SdkConfig.ServerTime;
             }
 
