@@ -129,6 +129,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
         // 处理checklogin connect失败
         private void HandleRelayConnectErr () {
+            Debugger.Log("handle relay connect err");
             // 重checklogin
             CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
             this.Socket.Emit ("autoAuth", null);
@@ -138,7 +139,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         // 处理异常错误码
         // 返回 true 会拦截 responses 回调
         private bool HandleErrCode (ClientSendServerRspWrap1 res) {
-            Debugger.Log("handle errcode {0}", res.ErrCode);
+            // Debugger.Log("handle errcode {0}", res.ErrCode);
             if (IsTokenError (res.ErrCode)) {
                 this.HandleTokenErr ();
                 Debugger.Log ("TOKEN_ERROR", res);

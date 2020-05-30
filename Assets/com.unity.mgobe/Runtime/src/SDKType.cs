@@ -183,9 +183,9 @@ namespace Lagame {
     }
 
     public class RequestFramePara {
-        public ulong BeginFrameId { get; set; }
+        public long BeginFrameId { get; set; }
 
-        public ulong EndFrameId { get; set; }
+        public long EndFrameId { get; set; }
     }
 
     /**
@@ -279,9 +279,9 @@ namespace Lagame {
     ///  获取房间列表参数
     /// </summary>
     public class GetRoomListPara {
-        public uint PageNo { get; set; }
+        public int PageNo { get; set; }
 
-        public uint PageSize { get; set; }
+        public int PageSize { get; set; }
 
         public string RoomType { get; set; } = "";
 

@@ -226,6 +226,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
             var rspWrap1 = res.RspWrap1;
             var eve = new ResponseEvent (rspWrap1.ErrCode, rspWrap1.ErrMsg, rspWrap1.Seq, res.Body);
             if (eve.Code == ErrCode.EcOk) {
+                Debugger.Log("check login response");
                 CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Checked);
             }
             EventUpload.PushRequestEvent (new ReqEventParam { rqRn = "checklogin", rqSq = eve.Seq, rqCd = eve.Code });

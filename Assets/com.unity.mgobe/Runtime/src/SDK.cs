@@ -350,14 +350,16 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         /// 获取房间列表
         /// </summary>
         public static void GetRoomList (GetRoomListPara getRoomListPara, Action<ResponseEvent> callback) {
-            if (getRoomListPara.PageNo < 0 || getRoomListPara.PageSize < 0) {
-                callback?.Invoke (new ResponseEvent (ErrCode.EcParamsInvalid, "参数错误，请确认", "", null));
+            if (getRoomListPara.PageNo < 0) {
+                callback?.Invoke (new ResponseEvent (61017, "PageNo 参数不合法，请确认", "", null));
                 return;
+            } else if(getRoomListPara.PageSize < 0) {
+                callback?.Invoke (new ResponseEvent (61018, "PageSize 参数不合法，请确认", "", null));
             }
             var para = new GetRoomListReq {
                 GameId = GameInfo.GameId,
-                PageNo = getRoomListPara.PageNo,
-                PageSize = getRoomListPara.PageSize,
+                PageNo = Convert.ToUInt32(getRoomListPara.PageNo),
+                PageSize = Convert.ToUInt32(getRoomListPara.PageSize),
                 IsDesc = getRoomListPara.IsDesc,
                 RoomType = getRoomListPara.RoomType
             };
@@ -384,7 +386,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
 
         // 开始帧同步
         public void StartFrameSync (Action<ResponseEvent> callback) {
-            var roomInfo = _frameSender.RoomInfo;
+            var roomInfo = _frameSender?.RoomInfo;
             if (roomInfo == null) {
                 StartFrameSyncFailRsp (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom), callback);
                 return;
@@ -440,11 +442,11 @@ namespace Packages.com.unity.mgobe.Runtime.src {
 
         // 禁止帧同步
         public void StopFrameSync (Action<ResponseEvent> callback) {
-            if (_frameSender.RoomInfo == null) {
+            var roomInfo = _frameSender.RoomInfo;
+            if (roomInfo == null) {
                 callback?.Invoke (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom, "未找到帧同步房间，请确认", "", null));
                 return;
             }
-            var roomInfo = _frameSender.RoomInfo;
             var req = new StopFrameSyncReq {
                 RoomId = roomInfo.Id,
                 GameId = GameInfo.GameId
@@ -456,7 +458,12 @@ namespace Packages.com.unity.mgobe.Runtime.src {
 
         // 发送帧同步数据
         public void SendFrame (SendFramePara para, Action<ResponseEvent> callback) {
-            var roomInfo = _frameSender.RoomInfo;
+            var roomInfo = _frameSender?.RoomInfo;
+            if (roomInfo == null) {
+                callback?.Invoke (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom, "未找到帧同步房间，请确认", "", null));
+                return;
+            }
+
             var req = new SendFrameReq {
                 RoomId = roomInfo.Id,
                 Item = new FrameItem {
@@ -465,17 +472,26 @@ namespace Packages.com.unity.mgobe.Runtime.src {
                 Timestamp = (ulong) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds)
                 }
             };
-            Debugger.Log("send frame length: {0}", req.Item.Data.Length);
+            Debugger.Log ("send frame length: {0}", req.Item.Data.Length);
             _frameSender.SendFrame (req, callback);
         }
 
         // 请求补帧
         public void RequestFrame (RequestFramePara para, Action<ResponseEvent> callback) {
-            var info = _frameSender.RoomInfo;
+            var roomInfo = _frameSender?.RoomInfo;
+            if (roomInfo == null) {
+                callback?.Invoke (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom, "未找到帧同步房间，请确认", "", null));
+                return;
+            }
+            if( para.BeginFrameId <0 || para.EndFrameId <0) {
+                callback?.Invoke (new ResponseEvent (ErrCode.EcParamsInvalid, "非法参数，请确认", "", null));
+                return;
+            }
+         
             var req = new RequestFrameReq {
-                RoomId = info.Id,
-                BeginFrameId = para.BeginFrameId,
-                EndFrameId = para.EndFrameId,
+                RoomId = roomInfo.Id,
+                BeginFrameId = Convert.ToUInt64(para.BeginFrameId),
+                EndFrameId = Convert.ToUInt64(para.EndFrameId),
             };
             _frameSender.RequestFrame (req, callback);
         }

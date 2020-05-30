@@ -58,7 +58,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
             }
 
             var seq = this.Send (body.ToByteString (), (int) ProtoCmd.ECmdHeartBeatReq, PongResposne, callback);
-            // if(this.Id == 1) Debugger.Log("send heartBeat: {0}", seq);
+            if(this.Id == 1) Debugger.Log("send heartBeat: {0}", seq);
             CurrentSeq = seq;
             this.PongTimer.SetTimer (() => HandlePongTimeout (seq), this.Timeout);
         }
@@ -96,6 +96,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
             }
 
             if (IsRelayConnectError (errCode) && this.client.Socket.Id == (int) ConnectionType.Relay) {
+                Debugger.Log("ping relay connect error, set offline");
                 CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
                 this.client.Socket.Emit ("autoAuth", new SocketEvent ());
             }

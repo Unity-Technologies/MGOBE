@@ -119,9 +119,9 @@ namespace Packages.com.unity.mgobe.Runtime.src
             {   
                 // check login 成功后发送业务数据
                 FrameSender.CheckLogin(null, "connect " + !!Socket2.IsSocketStatus("connect"));
-                if (Socket2.Url != null)
+                if (!string.IsNullOrEmpty(Socket2.Url))
                 {
-                    var eve = new ResponseEvent(ErrCode.EcOk) {Data = Socket1.Id};
+                    var eve = new ResponseEvent(ErrCode.EcOk) {Data = Socket2.Id};
                     Sdk.Responses.OnNetwork(eve);
                 }
                 Pinger2.Ping(null);
@@ -142,8 +142,9 @@ namespace Packages.com.unity.mgobe.Runtime.src
             Socket2.OnEvent("connectClose", (SocketEvent socketEvent) =>
             {
                 if (!SdkStatus.IsInited()) { return; }
+                Debugger.Log("socket2 on connect close");
                 CheckLoginStatus.SetStatus(CheckLoginStatus.StatusType.Offline);
-                if (Socket2.Url != null)
+                if (!string.IsNullOrEmpty(Socket2.Url))
                 {
                     var eve = new ResponseEvent(ErrCode.EcSdkSocketClose, "Socket 断开", null, null);
                     Sdk.Responses.OnNetwork(eve);
@@ -164,7 +165,7 @@ namespace Packages.com.unity.mgobe.Runtime.src
             Socket2.OnEvent("connectError", (SocketEvent socketEvent) =>
             {
                 if (!SdkStatus.IsInited()) return;
-                if ( string.IsNullOrEmpty(Socket2.Url)) return;
+                if (string.IsNullOrEmpty(Socket2.Url)) return;
                 var eve = new ResponseEvent(ErrCode.EcSdkSocketError, "Socket 错误", null, null);
                 Sdk.Responses.OnNetwork(eve);
             });
@@ -186,15 +187,18 @@ namespace Packages.com.unity.mgobe.Runtime.src
             Socket2.OnEvent("autoAuth", (SocketEvent socketEvent) =>
             {
                 if (!SdkStatus.IsInited()) return;
-                if (Socket2.Url != null) return;
+                if (string.IsNullOrEmpty(Socket2.Url)) return;
                 var timer = new Timer();
                 timer.SetTimer(() =>
                 {
+                    Debugger.Log("auto auth check 1");
                     // 检查是否需要重登录
                     if (UserStatus.IsStatus(UserStatus.StatusType.Logout)) UserUtil.Login(null);
 
                     // 检查是否需要 checkLogin
                     var info = FrameSender.RoomInfo ?? new RoomInfo { RouteId = "" };
+                    Debugger.Log("auto auth check 2: {0}", CheckLoginStatus.GetRouteId() != info.RouteId);
+
                     if (CheckLoginStatus.IsOffline() || CheckLoginStatus.GetRouteId() != info.RouteId)
                     {
                         FrameSender.CheckLogin((ResponseEvent eve) =>
@@ -206,6 +210,7 @@ namespace Packages.com.unity.mgobe.Runtime.src
                         }, "autoAuth");
                     }
                 }, 1000);
+                // timer.Close();
             });
         }
 

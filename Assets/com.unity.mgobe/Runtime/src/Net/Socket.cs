@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Concurrent;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
@@ -47,19 +47,18 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
             public Action<byte[], int> Handler { get; set; }
 
-            public Socket(int id, bool enableUdp, string url)
-            {
+            public Socket (int id, bool enableUdp, string url) {
                 this.Id = id;
                 this.Url = url;
                 this._enableUdp = enableUdp;
-                ReconnectTimer = new Util.Timer();
+                ReconnectTimer = new Util.Timer ();
                 ReconnectTimes = 0;
             }
 
             private void OpenSocketTask (string tag) {
-                if (string.IsNullOrEmpty(this.Url)) throw new Exception ("Socket.url = " + this.Url);
+                if (string.IsNullOrEmpty (this.Url)) throw new Exception ("Socket.url = " + this.Url);
                 if (!IsSocketStatus ("connect") && !IsSocketStatus ("close")) {
-                    ReconnectTimer.SetTimer(()=> OpenSocketTask ("close"), Config.ReconnectInterval);
+                    ReconnectTimer.SetTimer (() => OpenSocketTask ("close"), Config.ReconnectInterval);
                 }
                 if (!IsSocketStatus ("close")) return;
 
@@ -74,6 +73,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 ReconnectTimer.Close ();
                 ForceClose = false;
 
+                Debugger.Log ("socket enable: {0}", _enableUdp && Config.EnableUdp);
                 if (_enableUdp && Config.EnableUdp) {
                     this._socketTask = new KcpSocket (Url, _enableUdp);
                 } else {
@@ -150,7 +150,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             private void HandleSocketClose () {
                 EmitCloseStatus ();
 
-                ReconnectTimer.Start();
+                ReconnectTimer.Start ();
 
                 if (!this.ForceClose) return;
                 ReconnectTimes = 0;
@@ -171,8 +171,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                     Data = errMsg.Data
                 };
                 Emit ("connectError", eve);
-                ReconnectTimer.Start();
-                
+                ReconnectTimer.Start ();
+
             }
 
             private void OnTimedOpen (object source, System.Timers.ElapsedEventArgs e) {
@@ -216,14 +216,14 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             }
 
             public void Emit (string tag, SocketEvent socketEvent) {
-                if(socketEvent != null) socketEvent.Tag = tag;
-                foreach (var key in _eventHandlers.Keys.Where (key => key.Equals(tag) || key.Equals("*"))) {
-                    _eventHandlers[key].Invoke(socketEvent);
+                if (socketEvent != null) socketEvent.Tag = tag;
+                foreach (var key in _eventHandlers.Keys.Where (key => key.Equals (tag) || key.Equals ("*"))) {
+                    _eventHandlers[key].Invoke (socketEvent);
                 };
 
-                foreach (var key in EventOnceHandlers.Keys.Where (key => key.Equals(tag))) {
-                     _eventHandlers[key].Invoke(socketEvent);
-                     Action<SocketEvent> eve;
+                foreach (var key in EventOnceHandlers.Keys.Where (key => key.Equals (tag))) {
+                    _eventHandlers[key].Invoke (socketEvent);
+                    Action<SocketEvent> eve;
                     EventOnceHandlers.TryRemove (tag, out eve);
                 };
             }

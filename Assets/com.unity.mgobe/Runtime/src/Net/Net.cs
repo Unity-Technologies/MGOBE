@@ -218,7 +218,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             if (readyCode != 0) {
                 HandleSendFail (seq, readyCode);
             } else {
-                if (data.Length > 1000) {
+                if (data.Length > 800) {
                     Debugger.Log ("data send: {0}", seq);
                 }
                 Socket.Send (data,
@@ -233,7 +233,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         private void HandleSendFail (string seq, int code) {
             var val = SendQueue[seq];
             if (val == null) return;
-            Debugger.Log ("handle send fail: {0} {1}", code, DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout);
+            // Debugger.Log ("handle send fail: {0} {1}", code, DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout);
             if (DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout) {
                 var sendCode = UserStatus.GetErrCode () != 0 ? UserStatus.GetErrCode () : code;
                 val.sendFail (sendCode, null);
