@@ -1,7 +1,6 @@
 using System;
 using Google.Protobuf;
 using Lagame;
-using Lagame;
 using Packages.com.unity.mgobe.Runtime.src.EventUploader;
 using Packages.com.unity.mgobe.Runtime.src.Net;
 using Packages.com.unity.mgobe.Runtime.src.Sender;
@@ -40,8 +39,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
 
         ///////////////////////////////// PONG //////////////////////////////////
         public void Ping (Action<ResponseEvent> callback) {
-            PingTimer.Close ();
-            PingTimer = new Timer ();
+            PingTimer.Stop ();
             if (string.IsNullOrEmpty (RequestHeader.AuthKey)) {
                 return;
             }
@@ -71,8 +69,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
         ///////////////////////////////// PONG //////////////////////////////////
         private void HandlePong (bool send, DecodeRspResult res, DateTime startTime) {
             EventUpload.PushRequestEvent (new ReqEventParam { rqRn = "pong" + this.Id, rqSq = res.RspWrap1.Seq, rqCd = res.RspWrap1.ErrCode });
-            PongTimer.Close ();
-            PongTimer = new Timer ();
+            PongTimer.Stop ();
 
             if (!send) {
                 this.HandlePongTimeout (res.RspWrap1.Seq);
@@ -96,7 +93,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
             }
 
             if (IsRelayConnectError (errCode) && this.client.Socket.Id == (int) ConnectionType.Relay) {
-                Debugger.Log("ping relay connect error, set offline");
                 CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
                 this.client.Socket.Emit ("autoAuth", new SocketEvent ());
             }
@@ -106,8 +102,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
 
         //////////////////////////////// TIMEOUT ////////////////////////////////
         private void HandlePongTimeout (string seq) {
-            this.PongTimer.Close ();
-            this.PongTimer = new Timer ();
+            this.PongTimer.Stop ();
             this.client.DeleteSendQueue (seq);
             this.Retry--;
             if (!seq.Equals (this.CurrentSeq)) return;

@@ -16,7 +16,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.Broadcast {
             var frameRate = this._room.RoomInfo.FrameRate != 0 ? 1000 / this._room.RoomInfo.FrameRate : 66;
             void Callback (BroadcastEvent eve) {
                 var bst = (RecvFrameBst) eve?.Data;
-                if (bst?.Frame == null || !this.MatchId (bst.Frame.RoomId)) return;
+                if (bst?.Frame == null || !this.MatchId (bst.Frame.RoomId)) {
+                    Debugger.Log("roombst return: {} {1}", bst?.Frame == null, !this.MatchId (bst.Frame.RoomId));
+                    return;
+                }
                 _room.OnRecvFrame?.Invoke (eve);
             }
 

@@ -175,10 +175,10 @@ namespace Packages.com.unity.mgobe.Runtime.src
             {
                 if (!SdkStatus.IsInited()) return;
                 var timer = new Timer();
-                timer.SetTimer(() =>
+                timer.SetTimeout(() =>
                 {
                     var isLogout = UserStatus.IsStatus(UserStatus.StatusType.Logout);
-                    if (Socket1.Url != null && isLogout)
+                    if (!string.IsNullOrEmpty(Socket1.Url) && isLogout)
                     {
                         UserUtil.Login(null);
                     };
@@ -189,7 +189,7 @@ namespace Packages.com.unity.mgobe.Runtime.src
                 if (!SdkStatus.IsInited()) return;
                 if (string.IsNullOrEmpty(Socket2.Url)) return;
                 var timer = new Timer();
-                timer.SetTimer(() =>
+                timer.SetTimeout(() =>
                 {
                     Debugger.Log("auto auth check 1");
                     // 检查是否需要重登录
@@ -210,7 +210,6 @@ namespace Packages.com.unity.mgobe.Runtime.src
                         }, "autoAuth");
                     }
                 }, 1000);
-                // timer.Close();
             });
         }
 

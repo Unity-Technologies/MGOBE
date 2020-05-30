@@ -192,7 +192,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             ReadyState = Closing;
             _udpClient.Close ();
             _kcp.Release ();
-            Timer.Close ();
+            Timer.Stop ();
             ReadyState = Closed;
             base.onClose ();
             success?.Invoke ();

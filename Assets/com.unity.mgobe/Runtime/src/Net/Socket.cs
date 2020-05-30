@@ -41,7 +41,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
             public bool ForceClose { get; set; } = false;
 
-            public Timer ReconnectTimer { get; }
+            public readonly Timer ReconnectTimer  = new Util.Timer ();
 
             public int ReconnectTimes { get; set; }
 
@@ -51,14 +51,13 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 this.Id = id;
                 this.Url = url;
                 this._enableUdp = enableUdp;
-                ReconnectTimer = new Util.Timer ();
                 ReconnectTimes = 0;
             }
 
             private void OpenSocketTask (string tag) {
                 if (string.IsNullOrEmpty (this.Url)) throw new Exception ("Socket.url = " + this.Url);
                 if (!IsSocketStatus ("connect") && !IsSocketStatus ("close")) {
-                    ReconnectTimer.SetTimer (() => OpenSocketTask ("close"), Config.ReconnectInterval);
+                    ReconnectTimer.SetTimer (() => OpenSocketTask ("open"), Config.ReconnectInterval);
                 }
                 if (!IsSocketStatus ("close")) return;
 
@@ -70,7 +69,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                     return;
                 }
 
-                ReconnectTimer.Close ();
+                ReconnectTimer.Stop ();
                 ForceClose = false;
 
                 Debugger.Log ("socket enable: {0}", _enableUdp && Config.EnableUdp);
@@ -133,7 +132,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 );
             }
             public void DestroySocketTask () {
-                ReconnectTimer.Close ();
+                ReconnectTimer.Stop ();
                 if (!IsSocketStatus ("close")) {
                     CloseSocketTask (null, null);
                 }
@@ -144,19 +143,19 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             private void HandleSocketOpen () {
                 ReconnectTimes = 0;
                 EmitConnectStatus ();
-                ReconnectTimer.Close ();
+                ReconnectTimer.Stop ();
             }
 
             private void HandleSocketClose () {
                 EmitCloseStatus ();
 
-                ReconnectTimer.Start ();
+                ReconnectTimer.SetTimer(() => OpenSocketTask("close"), Config.ReconnectInterval);
 
                 if (!this.ForceClose) return;
                 ReconnectTimes = 0;
                 this.ForceClose = false;
                 // forceClose，取消timer，不进行重连
-                ReconnectTimer.Close ();
+                ReconnectTimer.Stop ();
             }
             private void HandleSocketMessage (SocketEvent e) {
                 var eve = new SocketEvent {
@@ -171,7 +170,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                     Data = errMsg.Data
                 };
                 Emit ("connectError", eve);
-                ReconnectTimer.Start ();
+                ReconnectTimer.SetTimer(() => OpenSocketTask("error"), Config.ReconnectInterval);
 
             }
 

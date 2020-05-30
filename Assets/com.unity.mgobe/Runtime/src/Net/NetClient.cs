@@ -80,7 +80,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
             if (data.Length > _maxDataLength) {
                 var val = SendQueue.ContainsKey (seq) ? SendQueue[seq] : null;
-                if (val != null) val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
+                var timer = new Timer ();
+                timer.SetTimeout (() => {
+                    if (val != null) val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
+                }, 0);
                 return seq;
             }
 
@@ -129,7 +132,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
         // 处理checklogin connect失败
         private void HandleRelayConnectErr () {
-            Debugger.Log("handle relay connect err");
+            Debugger.Log ("handle relay connect err");
             // 重checklogin
             CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
             this.Socket.Emit ("autoAuth", null);

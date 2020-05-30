@@ -64,9 +64,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
 
         // 循环检测 sendQueue 中的消息发送
         public static void StartQueueLoop () {
-            // Timer.setTimer(timer, checkSendQueue, Config.resendInterval);
             Timer.SetTimer (CheckSendQueue, Config.ResendInterval);
-            Timer.Start ();
         }
 
         private static readonly Action CheckSendQueue = () => {
