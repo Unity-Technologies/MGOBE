@@ -191,13 +191,13 @@ namespace Packages.com.unity.mgobe.Runtime.src
                 var timer = new Timer();
                 timer.SetTimeout(() =>
                 {
-                    Debugger.Log("auto auth check 1");
+                    // Debugger.Log("auto auth check 1");
                     // 检查是否需要重登录
                     if (UserStatus.IsStatus(UserStatus.StatusType.Logout)) UserUtil.Login(null);
 
                     // 检查是否需要 checkLogin
                     var info = FrameSender.RoomInfo ?? new RoomInfo { RouteId = "" };
-                    Debugger.Log("auto auth check 2: {0}", CheckLoginStatus.GetRouteId() != info.RouteId);
+                    // Debugger.Log("auto auth check 2: {0}", CheckLoginStatus.GetRouteId() != info.RouteId);
 
                     if (CheckLoginStatus.IsOffline() || CheckLoginStatus.GetRouteId() != info.RouteId)
                     {

@@ -80,7 +80,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
 
         private void OnClose (object sender, CloseEventArgs e) {
-            Debugger.Log("ws socket close {0} {1} {2}", e.Code, e.Reason, e.WasClean);
+            // Debugger.Log ("ws socket close {0} {1} {2}", e.Code, e.Reason, e.WasClean);
             ReadyState = Closed;
             base.onClose ();
         }
@@ -89,7 +89,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             var eve = new SocketEvent {
                 Msg = e.Message
             };
-            Debugger.Log("ws socket error {0} {1}", e.ToString(), e.Message);
+            Debugger.Log ("ws socket error {0} {1}", e.ToString (), e.Message);
             base.onError (eve);
         }
 
@@ -163,7 +163,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
         public override void Connect () {
             try {
-                Debugger.Log ("socket2 begin connect");
+                // Debugger.Log ("socket2 begin connect");
                 ReadyState = Connecting;
                 var state = new SocketStateObject { udpClient = _udpClient, endPoint = _endPoint };
 

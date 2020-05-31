@@ -12,8 +12,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
             this._timeEvent = onTimedEvent;
             this.Interval = interval;
             this.Elapsed += OnElapsedEvent;
-            this.AutoReset = false;
-            // this.Enabled = true;
+            this.AutoReset = true;
             this.Start();
         }
 
@@ -23,7 +22,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
             this.Interval = interval;
             this.Elapsed += OnElapsedEvent;
             this.AutoReset = false;
-            // this.Enabled = true;
             this.Start ();
         }
 

@@ -126,8 +126,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         public static void GetNetworkType (GetNetworkTypeObject obj) {
             obj.fail?.Invoke ("ERROR");
         }
-        public static async void Request (string url, BeaconData data, Action success, Action fail) {
-
+        async public static void Request (string url, BeaconData data, Action success, Action fail) {
             var json = JsonUtility.ToJson (data);
             HttpContent httpContent = new StringContent (json, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync (url, httpContent);

@@ -137,7 +137,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
             try {
                 var data = para.ToByteString();
                 var seq = this.NetUtil2.Send (data, subcmd, response, callback);
-                Debugger.Log ("SENDFRAME_Para {0} {1}", para, seq);
+                // Debugger.Log ("SENDFRAME_Para {0} {1}", para, seq);
                 return seq;
             } catch (System.Exception e) {
                 Debugger.Log("Error: {0}", e.ToString());
@@ -226,7 +226,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
             var rspWrap1 = res.RspWrap1;
             var eve = new ResponseEvent (rspWrap1.ErrCode, rspWrap1.ErrMsg, rspWrap1.Seq, res.Body);
             if (eve.Code == ErrCode.EcOk) {
-                Debugger.Log("check login response");
+                // Debugger.Log("check login response");
                 CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Checked);
             }
             EventUpload.PushRequestEvent (new ReqEventParam { rqRn = "checklogin", rqSq = eve.Seq, rqCd = eve.Code });

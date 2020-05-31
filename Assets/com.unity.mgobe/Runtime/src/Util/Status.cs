@@ -12,17 +12,20 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
         private static StatusType _status = StatusType.Logout;
         private static int _errCode = 0;
         private static string _errMsg = "";
+        private static readonly object _lock = new object();
 
         public static bool IsStatus (StatusType sdkStatus) {
-            // Debugger.Log ("Get userStatus: {0} {1}", _status, sdkStatus);
-            return _status == sdkStatus;
+            lock (_lock) {
+                return _status == sdkStatus;
+            }
         }
 
         public static void SetStatus (StatusType sdkStatus) {
-            _status = sdkStatus;
-            if (sdkStatus == StatusType.Login)
-                _errCode = 0;
-            // Debugger.Log ("Set userStatus: {0}", sdkStatus);
+            lock (_lock) {
+                _status = sdkStatus;
+                if (sdkStatus == StatusType.Login)
+                    _errCode = 0;
+            }
 
         }
 
@@ -49,21 +52,26 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
 
         private static StatusType _status = StatusType.Checking;
         private static string _curRouteId;
+        private static readonly object _lock = new object();
         public static bool IsChecked () {
-            Debugger.Log ("Get checkLoginStatus: {0}", _status);
-
-            return _status == StatusType.Checked;
+            lock (_lock) {
+                // Debugger.Log ("Get checkLoginStatus: {0}", _status);
+                return _status == StatusType.Checked;
+            }
         }
 
         public static bool IsOffline () {
-            Debugger.Log ("Get checkLoginStatus: {0}", _status);
-
-            return _status == StatusType.Offline;
+            lock (_lock) {
+                // Debugger.Log ("Get checkLoginStatus: {0}", _status);
+                return _status == StatusType.Offline;
+            }
         }
 
         public static void SetStatus (StatusType checkStatus) {
-            _status = checkStatus;
-            Debugger.Log ("Set checkLoginStatus: {0}", checkStatus);
+            lock (_lock) {
+                _status = checkStatus;
+                // Debugger.Log ("Set checkLoginStatus: {0}", checkStatus);
+            }
 
         }
 

@@ -56,7 +56,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
             }
 
             var seq = this.Send (body.ToByteString (), (int) ProtoCmd.ECmdHeartBeatReq, PongResposne, callback);
-            if(this.Id == 1) Debugger.Log("send heartBeat: {0}", seq);
+            // if(this.Id == 1) Debugger.Log("send heartBeat: {0}", seq);
             CurrentSeq = seq;
             this.PongTimer.SetTimer (() => HandlePongTimeout (seq), this.Timeout);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -166,7 +167,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         }
 
         public static void InitData () {
-            BeaconSdk.serverUrl = Conf.IsDebug ? "https://jrlts.wxcom/analytics/upload?tp=weapp" : "https://report.wxcom/analytics/upload?tp=weapp";
+            BeaconSdk.serverUrl = Conf.IsDebug ? "https://jrlts.wxlagame.com/analytics/upload?tp=weapp" : "https://report.wxlagame.com/analytics/upload?tp=weapp";
             SetLocation ();
             SetUserInfo ();
             SetNetworkType ();
@@ -212,7 +213,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             void Fail () {
                 callback?.Invoke (false);
             }
-            Adapter.Request (BeaconSdk.serverUrl, data, Success, Fail);
+            var task = Task.Run(() => Adapter.Request (BeaconSdk.serverUrl, data, Success, Fail));
+            task.Wait();
         }
 
     }
