@@ -68,7 +68,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Ping {
 
         ///////////////////////////////// PONG //////////////////////////////////
         private void HandlePong (bool send, DecodeRspResult res, DateTime startTime) {
-            EventUpload.PushRequestEvent (new ReqEventParam { rqRn = "pong" + this.Id, rqSq = res.RspWrap1.Seq, rqCd = res.RspWrap1.ErrCode });
             PongTimer.Stop ();
 
             if (!send) {

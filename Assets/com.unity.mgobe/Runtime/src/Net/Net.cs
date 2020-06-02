@@ -212,13 +212,11 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         // 调用 Socket 发送消息
         protected string Send (byte[] data, string seq, ProtoCmd subcmd) {
             var readyCode = GetReadyCode (subcmd);
-            // Debugger.Log("get status code: {0}", readyCode);
             if (readyCode != 0) {
                 HandleSendFail (seq, readyCode);
+            } else if (data.Length > 1016 && Socket.Id == 1 && !Config.EnableUdp) {
+                HandleSendFail (seq, ErrCode.EcRelayDataExceedLimited);
             } else {
-                if (data.Length > 800) {
-                    Debugger.Log ("data send: {0}", seq);
-                }
                 Socket.Send (data,
                     (code) => HandleSendFail (seq, code),
                     () => HandleSendSuccess (seq)
@@ -231,8 +229,9 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         private void HandleSendFail (string seq, int code) {
             var val = SendQueue[seq];
             if (val == null) return;
-            // Debugger.Log ("handle send fail: {0} {1}", code, DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout);
-            if (DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout) {
+
+            // 处理 wssocket 帧长度超过 856B
+            if (code == ErrCode.EcRelayDataExceedLimited || DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout) {
                 var sendCode = UserStatus.GetErrCode () != 0 ? UserStatus.GetErrCode () : code;
                 val.sendFail (sendCode, null);
                 return;

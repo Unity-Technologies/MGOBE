@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Google.Protobuf;
 using Lagame;
+using Packages.com.unity.mgobe.Runtime.src.EventUploader;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
@@ -109,7 +110,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 if (val == null) return;
                 // 处理错误码，并拦截 value.response
 
-                // if (Socket.Id == 1) Debugger.Log ("handle Message {0} {1}", val.Cmd, rsp.RspWrap1.ErrCode);
+                EventUpload.PushRequestEvent (new ReqEventParam { RqCmd = val.Cmd, RqSq = rsp.RspWrap1.Seq, RqCd = rsp.RspWrap1.ErrCode, Time = Convert.ToInt64 ((DateTime.Now - val.Time).TotalMilliseconds) });
 
                 // 心跳不拦截
                 if (val.Cmd != (int) ProtoCmd.ECmdHeartBeatReq && HandleErrCode (rsp.RspWrap1)) {

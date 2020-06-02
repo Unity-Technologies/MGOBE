@@ -15,12 +15,12 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
 
             var now = timestamp;
             var delta = now - AnimateUtil._lastTime;
-            var frameRate = Convert.ToInt64(1000 / (delta + 0.000001));
+            var frameRate = Convert.ToInt64 (1000 / (delta + 0.000001));
 
             AnimateUtil.frameRate = frameRate;
             AnimateUtil._lastTime = now;
 
-            StatCallbacks.onRenderFrameRate?.Invoke(delta);
+            StatCallbacks.onRenderFrameRate?.Invoke (delta);
         };
         public static void Run (long timestamp) {
             Callback?.Invoke (timestamp);
@@ -36,7 +36,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         private static int _reqPushInterval = 10000;
         private static int _validSeq = 0;
 
-        public EventUpload () {
+        public static void StartEventUpload () {
             var timer = new Timer ();
             timer.SetTimer (() => {
                 if (!_isInited) return;
@@ -63,7 +63,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             Init (openId, playerId, timeout);
 
             var eve = new BaseEvent (Events.InitSdk);
-            var param = new BaseEventParam { sv = SdKonfig.Version, pi = playerId, gi = GameInfo.GameId, sc = 9 };
+            var param = new BaseEventParam { Sv = SdKonfig.Version, Pi = playerId, Gi = GameInfo.GameId, Sc = 9 };
 
             eve.param = param;
             var list = new List<BaseEvent> { eve };
@@ -72,6 +72,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
                     callback?.Invoke ();
                 }
             });
+            StartEventUpload();
         }
 
         // 上报接口调用结果
@@ -87,7 +88,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             if (!_isInited) {
                 return;
             }
-            StatCallbacks.onPingTime?.Invoke (param.time);
+            StatCallbacks.onPingTime?.Invoke (param.Time);
             AddEventToQueue (param, Events.Ping);
         }
 
@@ -98,10 +99,9 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             }
 
             var param = new FrameRateEventParam {
-                frRt = AnimateUtil.frameRate,
-                reFt = deltaTime,
+                FrRt = AnimateUtil.frameRate,
+                ReFt = deltaTime,
             };
-
             AddEventToQueue (param, Events.FrameRate);
         }
 
@@ -112,17 +112,16 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             }
 
             var param = new RecvFrameEventParam {
-                sdFt = deltaTime
+                SdFt = deltaTime
             };
-
             AddEventToQueue (param, Events.RecFrame);
         }
 
         private static void AddEventToQueue (BaseEventParam param, string eventName) {
-            param.sv = SdKonfig.Version;
-            param.pi = Player.Id;
-            param.gi = GameInfo.GameId;
-            param.sc = 9;
+            param.Sv = SdKonfig.Version;
+            param.Pi = Player.Id;
+            param.Gi = GameInfo.GameId;
+            param.Sc = 9;
             _queue.Add (new BaseEvent (param, eventName));
         }
 

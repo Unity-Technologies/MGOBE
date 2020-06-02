@@ -23,12 +23,12 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         public int count;
         public float start;
         public string name;
-        public object param;
-        public BatchEvent (int count, float start, string name, object param) {
+        public BaseEventParam param;
+        public BatchEvent (int count, float start, string name, BaseEventParam param) {
             this.count = count;
             this.start = start;
             this.name = name;
-            this.param = param == null ? new object () : param;
+            this.param = param ?? new BaseEventParam ();
         }
     }
 
@@ -93,13 +93,13 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         }
 
         private static string GetRandom () {
-            return Convert.ToString (1e6 * Util.GetTime() + Math.Floor (1e6 * new System.Random ().NextDouble ()), CultureInfo.InvariantCulture);
+            return Convert.ToString (1e6 * Util.GetTime () + Math.Floor (1e6 * new System.Random ().NextDouble ()), CultureInfo.InvariantCulture);
         }
 
         private static string GetUuid () {
             var uuid = (string) Adapter.GetStorageSync (BeaconSdk.Prefix + BeaconSdk.U);
             if (uuid != null) return uuid;
-            
+
             uuid = GetRandom ();
             Adapter.SetStorageSync (BeaconSdk.Prefix + BeaconSdk.U, uuid);
 
@@ -189,12 +189,15 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
                 start = GetTime ();
             }
             var msgData = new MsgData {
-                id = GetRandom(),
+                id = GetRandom (),
                 start = start,
                 status = status,
                 duration = duration,
                 events = events
             };
+            // if (events.Count > 0) {
+            //     Debugger.Log ("Beacon data: {0}",  events[0].param);
+            // }
             var msgs = new List<Msg> { new Msg { type = 2, data = msgData, } };
 
             var sysInfo = GetSystemInfo ();
@@ -213,8 +216,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             void Fail () {
                 callback?.Invoke (false);
             }
-            var task = Task.Run(() => Adapter.Request (BeaconSdk.serverUrl, data, Success, Fail));
-            task.Wait();
+            var task = Task.Run (() => Adapter.Request (BeaconSdk.serverUrl, data, Success, Fail));
+            task.Wait ();
         }
 
     }
@@ -246,10 +249,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             }
         }
 
-        public void OnEvent (string eventName, object param, Action<bool> callback) {
+        public void OnEvent (string eventName, BaseEventParam param, Action<bool> callback) {
             var start = Util.GetTime ();
             var events = new List<BatchEvent> ();
-            if (param == null) param = new object ();
+            if (param == null) param = new BaseEventParam ();
             events.Add (new BatchEvent (1, start, eventName, param));
             Util.Request (4, start, 0, events, callback);
         }

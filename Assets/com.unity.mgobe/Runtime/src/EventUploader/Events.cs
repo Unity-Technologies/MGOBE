@@ -1,61 +1,126 @@
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader
-{
+using System;
+using System.Runtime.Serialization;
+
+namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
     // 基本参数
-    public static class Events
-    {
+    // public static class Events
+    // {
+    //     // 初始化SDK
+    //     public const string InitSdk = "e1";
+
+    //     // 接口调用
+    //     public const  string Request = "e2";
+    //     // 心跳时延
+    //     public const string Ping = "e3";
+    //     // 收发帧间隔
+    //     public const string RecFrame = "e4";
+    //     // 帧广播间隔
+    //     public const string FrameRate = "e5";
+    // }
+    public static class Events {
         // 初始化SDK
-        public const string InitSdk = "e1";
+        public const string InitSdk = "cs1";
 
         // 接口调用
-        public const  string Request = "e2";
+        public const string Request = "cs2";
         // 心跳时延
-        public const string Ping = "e3";
+        public const string Ping = "cs3";
         // 收发帧间隔
-        public const string RecFrame = "e4";
+        public const string RecFrame = "cs4";
         // 帧广播间隔
-        public const string FrameRate = "e5";
+        public const string FrameRate = "cs5";
     }
-    public class BaseEventParam
-    {
-        public string sv;   // sdk 版本
-        public int sc;      // sdk 渠道
-        public string pi;   // openID
-        public string gi;   // gameID
-        public BaseEventParam()
-        {
-            sv = "";
-            sc = 0;
-            pi = "";
-            gi = "";
+
+    [Serializable]
+    public class BaseEventParam : ISerializable {
+        public string Sv; // sdk 版本
+        public int Sc; // sdk 渠道
+        public string Pi; // openID
+        public string Gi; // gameID
+        public BaseEventParam () {
+            // Sv = "";
+            // Sc = 0;
+            // Pi = "";
+            // Gi = "";
+        }
+
+        public void GetObjectData (SerializationInfo info, StreamingContext context) {
+            info.AddValue ("sv", Sv);
+            info.AddValue ("sc", Sc);
+            info.AddValue ("pi", Pi);
+            info.AddValue ("gi", Gi);
         }
     }
     // 上报接口调用拓展参数
-    public class ReqEventParam : BaseEventParam
-    {
-        public string rqRn; // 请求名称
-        public string rqSq; // seq
-        public int rqCd;    // 错误码
-    }
+    [Serializable]
+    public class ReqEventParam : BaseEventParam, ISerializable {
+        public int RqCmd; // 请求名称
+        public string RqSq; // seq
+        public int RqCd; // 错误码
+        public long Time; // 时延
+        public ReqEventParam () {
 
-    // 上报心跳时延
-    public class PingEventParam : BaseEventParam
-    {
-        public readonly long time;    // 心跳时延
+        }
 
-        public PingEventParam(long time)
-        {
-            this.time = time;
+        void ISerializable.GetObjectData (SerializationInfo info, StreamingContext context) {
+            base.GetObjectData (info, context);
+            info.AddValue ("rqCmd", RqCmd);
+            info.AddValue ("rqSq", RqSq);
+            info.AddValue ("rqCd", RqCd);
+            info.AddValue("time", Time);
+        }
+
+        protected ReqEventParam (SerializationInfo info, StreamingContext context) {
+            RqCmd = info.GetInt32 ("rqCmd");
+            RqSq = info.GetString ("rqSq");
+            RqCd = info.GetInt32 ("rqCd");
+            Time = info.GetInt64("time");
         }
     }
 
-    public class RecvFrameEventParam : BaseEventParam
-    {
-        public long sdFt;    // 发收帧间隔
+    // 上报心跳时延
+    [Serializable]
+    public class PingEventParam : BaseEventParam, ISerializable {
+        public PingEventParam (long time) {
+            this.Time = time;
+        }
+
+        public long Time { get; }
+        public PingEventParam () {
+
+        }
+        void ISerializable.GetObjectData (SerializationInfo info, StreamingContext context) {
+            base.GetObjectData (info, context);
+            info.AddValue ("time", Time);
+        }
     }
 
-    public class FrameRateEventParam : BaseEventParam
-    {
-        public long frRt; // 画面帧率
-        public long reFt; // 帧广播间隔
+    [Serializable]
+    public class RecvFrameEventParam : BaseEventParam, ISerializable {
+        public long SdFt; // 发收帧间隔
+        public RecvFrameEventParam () {
+
+        }
+        void ISerializable.GetObjectData (SerializationInfo info, StreamingContext context) {
+            base.GetObjectData (info, context);
+            info.AddValue ("sdFt", SdFt);
+        }
+
+    }
+
+    [Serializable]
+    public class FrameRateEventParam : BaseEventParam, ISerializable {
+        public long FrRt; // 画面帧率
+        public long ReFt; // 帧广播间隔
+        public FrameRateEventParam () {
+
+        }
+
+        void ISerializable.GetObjectData (SerializationInfo info, StreamingContext context) {
+            base.GetObjectData (info, context);
+            info.AddValue ("frRt", FrRt);
+            info.AddValue ("reFt", ReFt);
+        }
+
     }
 }

@@ -80,7 +80,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
 
         private void OnClose (object sender, CloseEventArgs e) {
-            // Debugger.Log ("ws socket close {0} {1} {2}", e.Code, e.Reason, e.WasClean);
+            Debugger.Log ("ws socket close {0} {1} {2}", e.Code, e.Reason, e.WasClean);
             ReadyState = Closed;
             base.onClose ();
         }

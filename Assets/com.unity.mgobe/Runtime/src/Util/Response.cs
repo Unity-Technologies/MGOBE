@@ -14,13 +14,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
         private static Action<string> HandleRsp (ResponseEvent eve, HashSet<object> context) {
             return (string funcName) => {
                 if ( string.IsNullOrEmpty(funcName)) return;
-                var rspEvent = eve;
-                var para = new ReqEventParam {
-                    rqRn = funcName.Replace ("Rsp", ""),
-                    rqSq = rspEvent.Seq,
-                    rqCd = rspEvent.Code,
-                };
-                EventUpload.PushRequestEvent (para);
             };
         }
 

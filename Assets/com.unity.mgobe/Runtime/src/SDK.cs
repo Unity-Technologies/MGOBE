@@ -13,20 +13,11 @@ using UnityEngine;
 
 namespace Packages.com.unity.mgobe.Runtime.src {
     public class SdKonfig {
-        private int _pingInterval;
-        private int _reportInterval;
-        private long _serverTime;
-        private bool _enableUdp;
-
-        public SdKonfig () {
-            _pingInterval = 5000;
-            _reportInterval = 10000;
-            _enableUdp = false;
-            _serverTime = 0;
-            Version = "0.0.1";
-        }
-
-        public static string Version { get; set; }
+        private static int _pingInterval = 5000;
+        private static int _reportInterval = 10000;
+        private static long _serverTime = 0;
+        private static bool _enableUdp = false;
+        public static string Version { get; set; } = "1.0.6.3";
     }
 
     public class Sdk {
@@ -472,7 +463,6 @@ namespace Packages.com.unity.mgobe.Runtime.src {
                 Timestamp = (ulong) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds)
                 }
             };
-            Debugger.Log ("send frame length: {0}", req.Item.Data.Length);
             _frameSender.SendFrame (req, callback);
         }
 
