@@ -65,7 +65,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             var eve = new BaseEvent (Events.InitSdk);
             var param = new BaseEventParam { Sv = SdKonfig.Version, Pi = playerId, Gi = GameInfo.GameId, Sc = 9 };
 
-            eve.param = param;
+            eve.@params = param;
             var list = new List<BaseEvent> { eve };
             PushEvent<BaseEventParam> (list, true, () => {
                 if (validSeqTmp == _validSeq) {

@@ -14,7 +14,7 @@ using Object = System.Object;
 using Debug = UnityEngine.Debug;
 using Vector2 = UnityEngine.Vector2;
 
-[InitializeOnLoad]
+// [InitializeOnLoad]
 public class Main : MonoBehaviour {
 
     // 请求名称
@@ -33,23 +33,23 @@ public class Main : MonoBehaviour {
     // scroll content
     public RectTransform content;
 
-    public static void Stop () {
-        // Global.UnInit();
-    }
+    // public static void Stop () {
+    //     // Global.UnInit();
+    // }
 
-    private static Action<PlayModeStateChange> OnUnityPlayModeChanged = (PlayModeStateChange mode) => {
-        switch (mode) {
-            case PlayModeStateChange.ExitingPlayMode:
-                Stop ();
-                break;
-            default:
-                break;
-        }
-    };
+    // private static Action<PlayModeStateChange> OnUnityPlayModeChanged = (PlayModeStateChange mode) => {
+    //     switch (mode) {
+    //         case PlayModeStateChange.ExitingPlayMode:
+    //             Stop ();
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // };
 
     // Start is called before the first frame update
     void Start () {
-        EditorApplication.playModeStateChanged += OnUnityPlayModeChanged;
+        // EditorApplication.playModeStateChanged += OnUnityPlayModeChanged;
         SDKTools.nameStr = "xxx";
         SDKTools.paramStr = "xxx";
         SDKTools.rspStr = "xxx";
@@ -116,6 +116,9 @@ public class Main : MonoBehaviour {
                 GameId = "obg-8xwt9z7a",
                 Key = "f857f0dc320e77ed46081407645b3a9fcfd40983",
                 Domain = "8xwt9z7a.wxlagame.com",
+                // GameId = "obg-ernpm27s",
+                // Key = "0d0b3d21f243ad25c47b45ef07fe586fd01a3cce",
+                // Domain = "ernpm27s.wxlagame.com",
                 OpenId = "" + Utils.Date.now (),
             };
 

@@ -72,7 +72,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
                 ReconnectTimer.Stop ();
                 ForceClose = false;
 
-                // Debugger.Log ("socket enable: {0}", _enableUdp && Config.EnableUdp);
                 if (_enableUdp && Config.EnableUdp) {
                     this._socketTask = new KcpSocket (Url, _enableUdp);
                 } else {
