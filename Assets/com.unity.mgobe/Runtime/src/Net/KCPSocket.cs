@@ -35,7 +35,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         public CommSocket (string url) {
             this._url = url.ToLower ().Replace ("wss://", "").Replace ("ws://", "");
             this._url = $"wss://{this._url}/";
-            Debugger.Log("comm socket: {0}", this._url);
+            // Debugger.Log("comm socket: {0}", this._url);
         }
 
         public override void Connect () {
@@ -76,7 +76,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
         }
 
         private void OnOpen (object sender, EventArgs e) {
-            Debugger.Log("comm socket open");
+            // Debugger.Log("comm socket open");
 
             ReadyState = Open;
             base.onOpen ();
