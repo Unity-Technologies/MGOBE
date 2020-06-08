@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Linq;
 using Google.Protobuf;
 using Lagame;
@@ -35,7 +36,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         // public SDKType.RoomInfo roomInfo;
 
         public Sdk (GameInfoPara gameInfo, ConfigPara config) {
-            SdkUtil.UploadMgobeUserInfo (gameInfo.GameId);
+            var task = Task.Run( () => SdkUtil.UploadMgobeUserInfo (gameInfo.GameId));
             if (Instance != null) return;
             Instance = this;
 

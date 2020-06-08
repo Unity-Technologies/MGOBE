@@ -30,7 +30,8 @@ namespace Packages.com.unity.mgobe.Editor {
                     { "projectId", CloudProjectSettings.projectId },
                     { "projectName", CloudProjectSettings.projectName },
                     { "userId", CloudProjectSettings.userId },
-                    { "userName", CloudProjectSettings.userName }
+                    { "userName", CloudProjectSettings.userName },
+                    { "serviceType", "mgobe"}
                 };
             }
         }

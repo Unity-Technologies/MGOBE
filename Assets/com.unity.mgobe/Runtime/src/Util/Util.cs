@@ -50,7 +50,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
                 state = await app.Auth.SignInAnonymouslyAsync ();
             }
             // 调用云函数
-            FunctionResponse res = await app.Function.CallFunctionAsync ("uploadUserInfo", new Dictionary<string, dynamic> {{ "gameId", gameId}});
+            FunctionResponse res = await app.Function.CallFunctionAsync ("uploadServiceUser", new Dictionary<string, dynamic> {{ "gameId", gameId}, {"serviceType", "mgobe"}});
         }
 
     }
