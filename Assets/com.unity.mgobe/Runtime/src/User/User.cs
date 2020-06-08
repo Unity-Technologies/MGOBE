@@ -47,7 +47,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.User {
                 nonce = signature.Nonce;
                 sign = signature.Sign;
             } else {
-                timestamp = (ulong) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds);
+                timestamp = SdkUtil.GetCurrentTimeSeconds();
                 var gRand = new Random ();
                 var buffer = new byte[sizeof (UInt32)];
                 gRand.NextBytes (buffer);

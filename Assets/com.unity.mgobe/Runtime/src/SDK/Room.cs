@@ -7,6 +7,7 @@ using Packages.com.unity.mgobe.Runtime.src.Broadcast;
 using Packages.com.unity.mgobe.Runtime.src.Room;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+using UnityEngine;
 
 namespace Packages.com.unity.mgobe.Runtime.src.SDK {
     /********************************* SDK Room对象 *********************************/
@@ -269,6 +270,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.SDK {
                     eve.Data = rsp.RoomInfo?.ToByteString ();
                     this.RoomUtil.SaveRoomInfo (eve);
                     eve.Data = rsp;
+                    Debugger.Log("Get room detail: {0}", eve.Code);
                 }
                 callback?.Invoke (eve);
             });
@@ -377,7 +379,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.SDK {
                         var frame = new Frame {
                             Id = item.Id,
                             Ext = item.Ext,
-                            Time = Convert.ToInt64 ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds),
+                            Time = Convert.ToInt64 (SdkUtil.GetCurrentTimeSeconds()),
                             RoomId = RoomInfo.Id,
                             IsReplay = true
                         };

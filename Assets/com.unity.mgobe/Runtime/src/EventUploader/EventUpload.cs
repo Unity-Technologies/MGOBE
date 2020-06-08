@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Packages.com.unity.mgobe.Runtime.src.Util;
+using UnityEngine;
 
 namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
     public static class AnimateUtil {
@@ -65,7 +66,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             var eve = new BaseEvent (Events.InitSdk);
             var param = new BaseEventParam { Sv = SdKonfig.Version, Pi = playerId, Gi = GameInfo.GameId, Sc = 9 };
 
-            eve.@params = param;
+            eve.param = param;
             var list = new List<BaseEvent> { eve };
             PushEvent<BaseEventParam> (list, true, () => {
                 if (validSeqTmp == _validSeq) {
@@ -110,7 +111,6 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             if (!_isInited) {
                 return;
             }
-
             var param = new RecvFrameEventParam {
                 SdFt = deltaTime
             };

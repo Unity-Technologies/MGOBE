@@ -1,4 +1,5 @@
 using System;
+using Packages.com.unity.mgobe.Runtime.src.Util; 
 
 namespace Packages.com.unity.mgobe.Runtime.src.EventUploader
 {
@@ -13,17 +14,17 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader
             if (!_isInit)
             {
                 _lastFrameTime = now;
+                _isInit = true;
                 return;
             }
-
-            deltaTime = (now - _lastFrameTime).TotalSeconds;
+            deltaTime = (now - _lastFrameTime).TotalMilliseconds;
             StatCallbacks.onBstFrameRate?.Invoke(deltaTime);
             _lastFrameTime = now;
         }
 
         public static void Clear()
         {
-            _isInit = true;
+            _isInit = false;
         }
     }
 }

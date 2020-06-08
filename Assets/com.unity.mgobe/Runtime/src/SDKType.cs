@@ -109,7 +109,7 @@ namespace Lagame {
     /** 帧同步消息广播 */
     public class Signature {
         public Signature () {
-            Timestamp = (uint) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds);
+            Timestamp = SdkUtil.GetCurrentTimeSeconds();
         }
 
         public string Sign { get; set; }

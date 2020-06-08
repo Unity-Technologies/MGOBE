@@ -214,9 +214,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.Net {
             var readyCode = GetReadyCode (subcmd);
             if (readyCode != 0) {
                 HandleSendFail (seq, readyCode);
-            } else if (data.Length > 1016 && Socket.Id == 1 && !Config.EnableUdp) {
+            } else if (data.Length > 1016 && Socket.Id == 1) {
                 HandleSendFail (seq, ErrCode.EcRelayDataExceedLimited);
             } else {
+
                 Socket.Send (data,
                     (code) => HandleSendFail (seq, code),
                     () => HandleSendSuccess (seq)

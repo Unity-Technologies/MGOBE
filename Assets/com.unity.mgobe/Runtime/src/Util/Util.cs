@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 using CloudBase;
+using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
 namespace Packages.com.unity.mgobe.Runtime.src.Util {
     public static class SdkUtil {
@@ -30,19 +30,17 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
         public static string ErrCodeConvert (int code, string msg) {
             return code < 0 ? string.Format ("服务器内部错误[{0]", msg) : msg;
         }
-        public static long GetCurrentTimeSeconds () {
-            return (long)((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds);
+        public static ulong GetCurrentTimeSeconds () {
+            return Convert.ToUInt64 ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds);
         }
 
         public static long GetCurrentTimeMilliseconds () {
-            long retval = 0;
             var st = new DateTime (1970, 1, 1);
             TimeSpan t = (DateTime.Now.ToUniversalTime () - st);
-            retval = Convert.ToInt64(t.TotalMilliseconds + 0.5);
-            return retval;
+            return Convert.ToInt64 (t.TotalMilliseconds + 0.5);
         }
 
-       async public static void UploadMgobeUserInfo (string gameId) {
+        async public static void UploadMgobeUserInfo (string gameId) {
             CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
             AuthState state = await app.Auth.GetAuthStateAsync ();
             if (state == null) {
@@ -50,7 +48,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
                 state = await app.Auth.SignInAnonymouslyAsync ();
             }
             // 调用云函数
-            FunctionResponse res = await app.Function.CallFunctionAsync ("uploadServiceUser", new Dictionary<string, dynamic> {{ "gameId", gameId}, {"serviceType", "mgobe"}});
+            FunctionResponse res = await app.Function.CallFunctionAsync ("uploadServiceUser", new Dictionary<string, dynamic> { { "gameId", gameId }, { "serviceType", "mgobe" } });
         }
 
     }

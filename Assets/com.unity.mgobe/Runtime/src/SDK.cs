@@ -1,6 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using Google.Protobuf;
 using Lagame;
 using Packages.com.unity.mgobe.Runtime.src.Broadcast;
@@ -18,7 +18,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         private static int _reportInterval = 10000;
         private static long _serverTime = 0;
         private static bool _enableUdp = false;
-        public static string Version { get; set; } = "1.0.6.3";
+        public static string Version { get; set; } = "1.2.6.1";
     }
 
     public class Sdk {
@@ -36,7 +36,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
         // public SDKType.RoomInfo roomInfo;
 
         public Sdk (GameInfoPara gameInfo, ConfigPara config) {
-            var task = Task.Run( () => SdkUtil.UploadMgobeUserInfo (gameInfo.GameId));
+            var task = Task.Run (() => SdkUtil.UploadMgobeUserInfo (gameInfo.GameId));
             if (Instance != null) return;
             Instance = this;
 
@@ -345,13 +345,13 @@ namespace Packages.com.unity.mgobe.Runtime.src {
             if (getRoomListPara.PageNo < 0) {
                 callback?.Invoke (new ResponseEvent (61017, "PageNo 参数不合法，请确认", "", null));
                 return;
-            } else if(getRoomListPara.PageSize < 0) {
+            } else if (getRoomListPara.PageSize < 0) {
                 callback?.Invoke (new ResponseEvent (61018, "PageSize 参数不合法，请确认", "", null));
             }
             var para = new GetRoomListReq {
                 GameId = GameInfo.GameId,
-                PageNo = Convert.ToUInt32(getRoomListPara.PageNo),
-                PageSize = Convert.ToUInt32(getRoomListPara.PageSize),
+                PageNo = Convert.ToUInt32 (getRoomListPara.PageNo),
+                PageSize = Convert.ToUInt32 (getRoomListPara.PageSize),
                 IsDesc = getRoomListPara.IsDesc,
                 RoomType = getRoomListPara.RoomType
             };
@@ -461,7 +461,7 @@ namespace Packages.com.unity.mgobe.Runtime.src {
                 Item = new FrameItem {
                 PlayerId = RequestHeader.PlayerId,
                 Data = para.Data.ToString (),
-                Timestamp = (ulong) ((DateTime.Now.ToUniversalTime () - new DateTime (1970, 1, 1)).TotalSeconds)
+                Timestamp = Convert.ToUInt64 (SdkUtil.GetCurrentTimeMilliseconds ())
                 }
             };
             _frameSender.SendFrame (req, callback);
@@ -474,15 +474,15 @@ namespace Packages.com.unity.mgobe.Runtime.src {
                 callback?.Invoke (new ResponseEvent (ErrCode.EcRoomPlayerNotInRoom, "未找到帧同步房间，请确认", "", null));
                 return;
             }
-            if( para.BeginFrameId <0 || para.EndFrameId <0) {
+            if (para.BeginFrameId < 0 || para.EndFrameId < 0) {
                 callback?.Invoke (new ResponseEvent (ErrCode.EcParamsInvalid, "非法参数，请确认", "", null));
                 return;
             }
-         
+
             var req = new RequestFrameReq {
                 RoomId = roomInfo.Id,
-                BeginFrameId = Convert.ToUInt64(para.BeginFrameId),
-                EndFrameId = Convert.ToUInt64(para.EndFrameId),
+                BeginFrameId = Convert.ToUInt64 (para.BeginFrameId),
+                EndFrameId = Convert.ToUInt64 (para.EndFrameId),
             };
             _frameSender.RequestFrame (req, callback);
         }

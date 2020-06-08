@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
 using Packages.com.unity.mgobe.Runtime.src.Util;
 using UnityEngine;
-using Newtonsoft.Json;
 
 namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
     public class GetLocationObject {
@@ -119,7 +119,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
                 // Stop service if there is no need to query location updates continuously
                 Input.location.Stop ();
             } catch (System.Exception e) {
-                Debugger.Log(e.ToString());
+                Debugger.Log (e.ToString ());
                 throw;
             }
         }
@@ -128,12 +128,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             obj.fail?.Invoke ("ERROR");
         }
         async public static void Request (string url, BeaconData data, Action success, Action fail) {
-            // var json = JsonUtility.ToJson (data);
-            var json = JsonConvert.SerializeObject(data);
+            var json = JsonConvert.SerializeObject (data);
             HttpContent httpContent = new StringContent (json, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync (url, httpContent);
             var responseString = await response.Content.ReadAsStringAsync ();
-            // Debugger.Log("{0}",json);
         }
 
     }

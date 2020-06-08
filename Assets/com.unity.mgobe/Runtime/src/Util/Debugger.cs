@@ -9,7 +9,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
             if (!_enable)
                 return;
             // Console.WriteLine(String.Format(format, args));
-            Debug.Log (String.Format (format, args));
+            var str = String.Format (format, args);
+            Debug.Log (str);
             _callback?.Invoke ();
         }
     }

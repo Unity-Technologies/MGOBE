@@ -135,12 +135,12 @@ namespace Packages.com.unity.mgobe.Runtime.src.Sender {
             var response = new NetResponseCallback (this.SendFrameResponse);
             const int subcmd = (int) ProtoCmd.ECmdRelaySendFrameReq;
             try {
-                var data = para.ToByteString();
+                var data = para.ToByteString ();
                 var seq = this.NetUtil2.Send (data, subcmd, response, callback);
                 // Debugger.Log ("SENDFRAME_Para {0} {1}", para, seq);
                 return seq;
             } catch (System.Exception e) {
-                Debugger.Log("Error: {0}", e.ToString());
+                Debugger.Log ("Error: {0}", e.ToString ());
                 throw;
             }
 
