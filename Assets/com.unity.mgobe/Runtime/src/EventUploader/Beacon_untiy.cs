@@ -23,12 +23,12 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         public int count;
         public float start;
         public string name;
-        public BaseEventParam param;
+        public BaseEventParam @params;
         public BatchEvent (int count, float start, string name, BaseEventParam param) {
             this.count = count;
             this.start = start;
             this.name = name;
-            this.param = param ?? new BaseEventParam ();
+            this.@params = param ?? new BaseEventParam ();
         }
     }
 
@@ -41,13 +41,13 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
     [Serializable]
     public class BaseEvent {
         public string eventName;
-        public BaseEventParam param;
+        public BaseEventParam @params;
         public BaseEvent (string eventName) {
-            this.param = new BaseEventParam ();
+            this.@params = new BaseEventParam ();
             this.eventName = eventName;
         }
         public BaseEvent (BaseEventParam param, string eventName) {
-            this.param = param;
+            this.@params = param;
             this.eventName = eventName;
         }
     }
@@ -259,7 +259,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
 
         public static void OnEvents (IEnumerable<BaseEvent> events, Action<bool> callback) {
             var start = Util.GetTime ();
-            var eventsBatch = events.Select (eve => new BatchEvent (1, start, eve.eventName, eve.param)).ToList ();
+            var eventsBatch = events.Select (eve => new BatchEvent (1, start, eve.eventName, eve.@params)).ToList ();
             if (eventsBatch.Count > 0) {
                 Util.Request (4, start, 0, eventsBatch, callback);
             }

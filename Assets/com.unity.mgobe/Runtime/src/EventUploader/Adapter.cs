@@ -129,6 +129,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
         }
         async public static void Request (string url, BeaconData data, Action success, Action fail) {
             var json = JsonConvert.SerializeObject (data);
+            Debugger.Log("beancon {0}", json);
             HttpContent httpContent = new StringContent (json, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync (url, httpContent);
             var responseString = await response.Content.ReadAsStringAsync ();
