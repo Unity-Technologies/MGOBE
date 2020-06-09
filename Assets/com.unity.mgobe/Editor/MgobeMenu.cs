@@ -16,7 +16,7 @@ namespace Packages.com.unity.mgobe.Editor {
         private static void RedirectToTencentCloud () {
             var task = Task.Run(TcbClient.updateUserInfo);
             task.Wait();
-            Application.OpenURL ("https://console.cloud.tencent.com/mgobe?utm_source=unity");
+            Application.OpenURL ("https://console.cloud.tencent.com/tcb?from=12359&channel=unity");
         }
 
         [MenuItem (MgobeRootMenu + "/ 使用指引")]
