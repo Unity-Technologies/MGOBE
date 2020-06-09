@@ -23,7 +23,6 @@
 
 *.log
 *.pyc
-*.meta
 
 CS_beacon.md
 
