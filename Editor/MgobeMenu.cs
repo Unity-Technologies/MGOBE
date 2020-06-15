@@ -14,13 +14,15 @@ namespace Packages.com.unity.mgobe.Editor {
 
         [MenuItem (MgobeRootMenu + "/ Mgobe 对战引擎控制台")]
         private static void RedirectToTencentCloud () {
-            var task = Task.Run(TcbClient.updateUserInfo);
-            task.Wait();
+            var task = Task.Run (TcbClient.updateUserInfo);
+            task.Wait ();
             Application.OpenURL ("https://console.cloud.tencent.com/tcb?from=12359&channel=unity");
         }
 
         [MenuItem (MgobeRootMenu + "/ 使用指引")]
         private static void RedirectToUnity () {
+            var task = Task.Run (TcbClient.updateUserInfo);
+            task.Wait ();
             Application.OpenURL ("https://unity.cn/mgobe");
         }
     }
