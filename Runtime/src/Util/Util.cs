@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CloudBase;
+using com.unity.cloudbase.Runtime;
 using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
 namespace Packages.com.unity.mgobe.Runtime.src.Util {
