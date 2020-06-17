@@ -6,12 +6,13 @@ using Google.Protobuf;
 using com.unity.mgobe.src.Broadcast;
 using com.unity.mgobe.src.Util;
 using com.unity.mgobe.src.Util.Def;
+using com.unity.mgobe.src;
 
-namespace com.unity.mgobe.src.Room {
-    public class RoomUtil {
-        private readonly SDK.Room _room;
+namespace com.unity.mgobe {
+    internal class RoomUtil {
+        private readonly Room _room;
 
-        public RoomUtil (SDK.Room room) {
+        public RoomUtil (Room room) {
             this._room = room;
             this._room.RoomInfo = new RoomInfo ();
         }

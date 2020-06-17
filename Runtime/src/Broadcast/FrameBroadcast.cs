@@ -56,7 +56,7 @@ namespace com.unity.mgobe.src.Broadcast
             this._lastFrameTime = 0;
         }
 
-        public void Push(BroadcastEvent eve, SDK.Room room)
+        public void Push(BroadcastEvent eve, com.unity.mgobe.Room room)
         {
             var bst = (RecvFrameBst)eve.Data;
             var frameId = Convert.ToInt32(bst.Frame.Id);
@@ -94,7 +94,7 @@ namespace com.unity.mgobe.src.Broadcast
             }
         }
 
-        public void RetryFill(SDK.Room room)
+        public void RetryFill(com.unity.mgobe.Room room)
         {
             if (this._beginFrameId == this._endFrameId && this._beginFrameId < 0)
             {
@@ -168,7 +168,7 @@ namespace com.unity.mgobe.src.Broadcast
             }
         }
 
-        private void Fill(int beginFrameId, int endFrameId, SDK.Room room)
+        private void Fill(int beginFrameId, int endFrameId, com.unity.mgobe.Room room)
         {
             if (!room.IsInRoom())
             {

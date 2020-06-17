@@ -1,7 +1,7 @@
 using com.unity.mgobe.src.Util;
 
 
-namespace com.unity.mgobe.src
+namespace com.unity.mgobe
 {
     public class Player
     {

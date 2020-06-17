@@ -3,15 +3,14 @@ using System.Linq;
 using Google.Protobuf;
 
 using com.unity.mgobe.src.Util;
-using com.unity.mgobe.src.Util.Def;
 
 namespace com.unity.mgobe.src.Broadcast {
     public class RoomBroadcast {
-        private readonly SDK.Room _room;
+        private readonly com.unity.mgobe.Room _room;
         public FrameBroadcast FrameBroadcast { get; }
         public int FrameBroadcastFrameId { get; } = 0;
 
-        public RoomBroadcast (SDK.Room room) {
+        public RoomBroadcast (com.unity.mgobe.Room room) {
             this._room = room;
             var frameRate = this._room.RoomInfo.FrameRate != 0 ? 1000 / this._room.RoomInfo.FrameRate : 66;
             void Callback (BroadcastEvent eve) {
@@ -271,7 +270,7 @@ namespace com.unity.mgobe.src.Broadcast {
                 },
                 eve.Seq);
             Debugger.Log ("onMatch bst gloal {0}", roomEvent);
-            SDK.Room.OnMatch?.Invoke (roomEvent);
+            com.unity.mgobe.Room.OnMatch?.Invoke (roomEvent);
         }
 
         /**
@@ -284,7 +283,7 @@ namespace com.unity.mgobe.src.Broadcast {
                 new MatchBst { ErrCode = bst.ErrCode },
                 eve.Seq
             );
-            SDK.Room.OnMatch?.Invoke (roomEvent);
+            com.unity.mgobe.Room.OnMatch?.Invoke (roomEvent);
         }
 
         /**
@@ -299,7 +298,7 @@ namespace com.unity.mgobe.src.Broadcast {
                         PlayerId = bst.PlayerId
                 },
                 eve.Seq);
-            SDK.Room.OnCancelMatch?.Invoke (roomEvent);
+            com.unity.mgobe.Room.OnCancelMatch?.Invoke (roomEvent);
         }
     }
 }

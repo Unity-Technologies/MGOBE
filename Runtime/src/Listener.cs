@@ -1,10 +1,10 @@
 using System;
 using com.unity.mgobe.src.Util.Def;
 using com.unity.mgobe.src.Broadcast;
-using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src;
 
 
-namespace com.unity.mgobe.src
+namespace com.unity.mgobe
 {
     public class Listener
     {
@@ -36,14 +36,14 @@ namespace com.unity.mgobe.src
         }
 
         // Sdk Room 实例添加广播监听
-        public static void Add(SDK.Room room)
+        public static void Add(Room room)
         {
             room.RoomUtil.InitBroadcast();
             Sdk.Instance.BindResponse(room.RoomBroadcast);
         }
 
         // Sdk Room 实例移除广播监听
-        public static void Remove(SDK.Room room)
+        public static void Remove(Room room)
         {
             Sdk.Instance.UnbindResponses(room.RoomBroadcast);
         }

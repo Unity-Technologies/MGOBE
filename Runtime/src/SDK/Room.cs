@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
 
+using com.unity.mgobe.src.SDK;
 using com.unity.mgobe.src.Broadcast;
-using com.unity.mgobe.src.Room;
+using com.unity.mgobe.src;
 using com.unity.mgobe.src.Util;
 using com.unity.mgobe.src.Util.Def;
+
 using UnityEngine;
 
-namespace com.unity.mgobe.src.SDK {
+namespace com.unity.mgobe {
     /********************************* SDK Room对象 *********************************/
     public class Room : RoomBroadcastHandler {
-        public RoomUtil RoomUtil { get; }
+        internal RoomUtil RoomUtil { get; }
 
         public RoomBroadcast RoomBroadcast { get; set; }
 
