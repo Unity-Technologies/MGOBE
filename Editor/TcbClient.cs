@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-
-#if HAS_CLOUDBASE
-using com.unity.cloudbase.Runtime;
-#endif
+using com.unity.cloudbase;
 
 namespace com.unity.mgobe.Editor {
     public class UserInfo {
@@ -39,8 +36,6 @@ namespace com.unity.mgobe.Editor {
         }
 
         async public static void updateUserInfo () {
-#if HAS_CLOUDBASE
-
             CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
             AuthState state = await app.Auth.GetAuthStateAsync ();
 
@@ -51,8 +46,6 @@ namespace com.unity.mgobe.Editor {
 
             // 调用云函数
             FunctionResponse res = await app.Function.CallFunctionAsync ("updateUserInfo", _userInfo);
-#endif
-
         }
     }
 }

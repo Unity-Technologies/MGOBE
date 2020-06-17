@@ -6,10 +6,10 @@
 		], 
 	"name": "com.unity.mgobe",
 	"displayName": "Mgobe",
-	"version": "1.0.2-preview",
+	"version": "1.0.3-preview",
 	"unity": "2019.3",
 	"description": "Unity Mgobe is a lightweight multiplayer online game engine. With limited coding, developers can quickly build games which needs frame synchronization or state synchronization.", 
 	"dependencies": {
-		"com.unity.cloudbase": "1.0.2-preview"
+		"com.unity.cloudbase": "1.0.3-preview"
 	}
 }

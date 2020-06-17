@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.unity.mgobe.src.Util.Def;
-
-#if HAS_CLOUDBASE
-using com.unity.cloudbase.Runtime;
-#endif
+using com.unity.cloudbase;
 
 namespace com.unity.mgobe.src.Util {
     public static class SdkUtil {
@@ -44,8 +41,6 @@ namespace com.unity.mgobe.src.Util {
         }
 
         async public static void UploadMgobeUserInfo (string gameId) {
-#if HAS_CLOUDBASE
-
             CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
             AuthState state = await app.Auth.GetAuthStateAsync ();
             if (state == null) {
@@ -54,7 +49,6 @@ namespace com.unity.mgobe.src.Util {
             }
             // 调用云函数
             FunctionResponse res = await app.Function.CallFunctionAsync ("uploadServiceUser", new Dictionary<string, dynamic> { { "gameId", gameId }, { "serviceType", "mgobe" } });
-#endif
         }
     }
 }
