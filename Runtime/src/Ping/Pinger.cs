@@ -1,13 +1,13 @@
 using System;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.EventUploader;
-using Packages.com.unity.mgobe.Runtime.src.Net;
-using Packages.com.unity.mgobe.Runtime.src.Sender;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Ping {
+using com.unity.mgobe.src.EventUploader;
+using com.unity.mgobe.src.Net;
+using com.unity.mgobe.src.Sender;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
+namespace com.unity.mgobe.src.Ping {
     public class Pinger : BaseNetUtil {
         private const int _maxPingRetry = 2;
 

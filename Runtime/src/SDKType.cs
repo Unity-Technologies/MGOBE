@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf.Collections;
-using Packages.com.unity.mgobe.Runtime.src.Util;
+using com.unity.mgobe.src.Util;
 
-namespace Lagame {
+namespace com.unity.mgobe {
     /** Properties of a Frame. */
     [Serializable]
     public partial class Frame {

@@ -2,17 +2,17 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Broadcast;
-using Packages.com.unity.mgobe.Runtime.src.Net;
-using Packages.com.unity.mgobe.Runtime.src.Net.Sockets;
-using Packages.com.unity.mgobe.Runtime.src.Sender;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+
+using com.unity.mgobe.src.Broadcast;
+using com.unity.mgobe.src.Net;
+using com.unity.mgobe.src.Net.Sockets;
+using com.unity.mgobe.src.Sender;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
 using UnityEngine;
 // using System.Text.Json.Serialization;
 
-namespace Packages.com.unity.mgobe.Runtime.src {
+namespace com.unity.mgobe.src {
     public class SdKonfig {
         private static int _pingInterval = 5000;
         private static int _reportInterval = 10000;

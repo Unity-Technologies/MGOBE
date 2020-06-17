@@ -1,7 +1,7 @@
 using System;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src
+
+namespace com.unity.mgobe.src
 {
     public class GameInfo
     {

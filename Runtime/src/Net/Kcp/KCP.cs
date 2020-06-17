@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net.Kcp
+namespace com.unity.mgobe.src.Net.Kcp
 {
     public class Kcp
     {

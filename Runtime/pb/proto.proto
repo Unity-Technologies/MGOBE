@@ -1,5 +1,5 @@
 syntax = "proto3";
-package lagame; 
+package com.unity.mgobe; 
 
 ///Header - 二进制格式： 0x2 + htonl(整个包长(4字节)) + QAppRequest/QAppResponse+0x3  = 6bytes
 message ClientSendServerReqWrap1 {

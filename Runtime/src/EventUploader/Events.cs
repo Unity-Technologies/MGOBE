@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
+namespace com.unity.mgobe.src.EventUploader {
     // 基本参数
     // public static class Events
     // {

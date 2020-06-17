@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Packages.com.unity.mgobe.Runtime.src.Util;
+using com.unity.mgobe.src.Util;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 // 灯塔 SDK Unity 1.0.7
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
+namespace com.unity.mgobe.src.EventUploader {
     [Serializable]
     public class MsgData {
         public string id;

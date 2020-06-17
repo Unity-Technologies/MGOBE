@@ -1,11 +1,11 @@
 using System;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
-using Packages.com.unity.mgobe.Runtime.src.EventUploader;
+
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+using com.unity.mgobe.src.EventUploader;
 
 
-namespace Packages.com.unity.mgobe.Runtime.src.User
+namespace com.unity.mgobe.src.User
 {
     public static class UserUtil
     {

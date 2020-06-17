@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.EventUploader;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net {
+using com.unity.mgobe.src.EventUploader;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
+namespace com.unity.mgobe.src.Net {
     public class NetClient : Net {
 
         private readonly int _maxDataLength = Convert.ToInt32 (Math.Pow (2, 12));

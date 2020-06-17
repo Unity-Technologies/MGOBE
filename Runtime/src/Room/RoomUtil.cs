@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
-using Lagame;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Broadcast;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Room {
+
+using com.unity.mgobe.src.Broadcast;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
+namespace com.unity.mgobe.src.Room {
     public class RoomUtil {
         private readonly SDK.Room _room;
 

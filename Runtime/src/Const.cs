@@ -1,4 +1,4 @@
-namespace Packages.com.unity.mgobe.Runtime.src
+namespace com.unity.mgobe.src
 {
     public enum ClientSendServerReqWrap2Cmd
     {

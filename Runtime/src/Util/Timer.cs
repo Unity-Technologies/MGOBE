@@ -1,7 +1,7 @@
 using System;
 using System.Timers;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+namespace com.unity.mgobe.src.Util {
     public class Timer : System.Timers.Timer {
 
         private Action _timeEvent;

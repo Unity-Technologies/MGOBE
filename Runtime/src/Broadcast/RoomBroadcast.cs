@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Broadcast {
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
+namespace com.unity.mgobe.src.Broadcast {
     public class RoomBroadcast {
         private readonly SDK.Room _room;
         public FrameBroadcast FrameBroadcast { get; }

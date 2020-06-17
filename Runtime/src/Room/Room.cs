@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Net;
-using Packages.com.unity.mgobe.Runtime.src.Util;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Room
+using com.unity.mgobe.src.Net;
+using com.unity.mgobe.src.Util;
+
+namespace com.unity.mgobe.src.Room
 {
     public class Room : BaseNetUtil
     {

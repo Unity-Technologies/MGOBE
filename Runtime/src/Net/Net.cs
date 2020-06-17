@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Net.Sockets;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def; // using System.Timers;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net {
+using com.unity.mgobe.src.Net.Sockets;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def; // using System.Timers;
+
+
+namespace com.unity.mgobe.src.Net {
     public struct MessageWrapper {
         public byte Pre { get; set; }
 

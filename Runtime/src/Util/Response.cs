@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Broadcast;
-using Packages.com.unity.mgobe.Runtime.src.EventUploader;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+using com.unity.mgobe.src.Broadcast;
+using com.unity.mgobe.src.EventUploader;
+
+namespace com.unity.mgobe.src.Util {
     public class Responses {
         private static Responses _instance;
         private RoomBroadcast _roomBroadcast;

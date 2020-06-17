@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json;
-using Packages.com.unity.mgobe.Runtime.src.Util;
+// using Newtonsoft.Json;
+using com.unity.mgobe.src.Util;
 using UnityEngine;
 
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
+namespace com.unity.mgobe.src.EventUploader {
     public class GetLocationObject {
         public string type;
         public bool altitude;
@@ -128,10 +128,10 @@ namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
             obj.fail?.Invoke ("ERROR");
         }
         async public static void Request (string url, BeaconData data, Action success, Action fail) {
-            var json = JsonConvert.SerializeObject (data);
-            HttpContent httpContent = new StringContent (json, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync (url, httpContent);
-            var responseString = await response.Content.ReadAsStringAsync ();
+            // var json = JsonConvert.SerializeObject (data);
+            // HttpContent httpContent = new StringContent (json, Encoding.UTF8, "application/json");
+            // var response = await Client.PostAsync (url, httpContent);
+            // var responseString = await response.Content.ReadAsStringAsync ();
         }
 
     }

@@ -1,8 +1,8 @@
 using System;
 using Google.Protobuf;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+
+namespace com.unity.mgobe.src.Util {
     public struct DecodeBstResult {
         public ServerSendClientBstWrap1 BstWrap1 { get; set; }
 

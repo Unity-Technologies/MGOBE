@@ -1,7 +1,7 @@
 using System;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.SDK
+
+namespace com.unity.mgobe.src.SDK
 {
     public abstract class RoomBroadcastHandler {
         // 新玩家加入房间广播回调接口

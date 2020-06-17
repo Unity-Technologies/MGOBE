@@ -1,6 +1,6 @@
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+
+namespace com.unity.mgobe.src.Util {
     public static class UserStatus {
         public enum StatusType : int {
             Login = 1,

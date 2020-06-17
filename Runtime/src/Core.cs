@@ -1,15 +1,15 @@
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Net;
-using Packages.com.unity.mgobe.Runtime.src.Net.Sockets;
-using Packages.com.unity.mgobe.Runtime.src.Ping;
-using Packages.com.unity.mgobe.Runtime.src.Sender;
-using Packages.com.unity.mgobe.Runtime.src.User;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
-using Lagame;
+
+using com.unity.mgobe.src.Net;
+using com.unity.mgobe.src.Net.Sockets;
+using com.unity.mgobe.src.Ping;
+using com.unity.mgobe.src.Sender;
+using com.unity.mgobe.src.User;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
 // using Minigame.SdkType;
 
-namespace Packages.com.unity.mgobe.Runtime.src
+namespace com.unity.mgobe.src
 {
     public static class Core
     {

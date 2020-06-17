@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Packages.com.unity.mgobe.Editor {
+namespace com.unity.mgobe.Editor {
     internal static class MgobeMenu {
         public const string MgobeRootMenu = "Mgobe";
 

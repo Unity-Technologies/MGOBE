@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Broadcast
+
+namespace com.unity.mgobe.src.Broadcast
 {
     public static class BroadcastOnce
     {

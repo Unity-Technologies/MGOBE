@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+namespace com.unity.mgobe.src.Util {
     public static class Debugger {
         private static bool _enable = true;
         private static Action _callback = null;

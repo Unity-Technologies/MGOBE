@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Packages.com.unity.mgobe.Runtime.src.Util;
+using com.unity.mgobe.src.Util;
 using UnityEngine;
 
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader {
+namespace com.unity.mgobe.src.EventUploader {
     public static class AnimateUtil {
         private static long _lastTime = 0;
         public static long frameRate = 0;

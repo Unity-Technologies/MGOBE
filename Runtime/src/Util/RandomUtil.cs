@@ -1,6 +1,6 @@
 using System;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+namespace com.unity.mgobe.src.Util {
     public static class RandomUtil {
         private static double _xn1 = 0;
         private static double _a = 1103515245;

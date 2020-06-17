@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using com.unity.cloudbase.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Packages.com.unity.mgobe.Editor {
+#if HAS_CLOUDBASE
+using com.unity.cloudbase.Runtime;
+#endif
+
+namespace com.unity.mgobe.Editor {
     public class UserInfo {
         public string organizationId;
         public string organizationName;
@@ -24,19 +27,20 @@ namespace Packages.com.unity.mgobe.Editor {
 
         static void InitUserInfo () {
             if (_userInfo == null) {
-                _userInfo = new Dictionary<string, dynamic> { 
-                    { "organizationId", CloudProjectSettings.organizationId },
-                    { "organizationName", CloudProjectSettings.organizationName },
-                    { "projectId", CloudProjectSettings.projectId },
-                    { "projectName", CloudProjectSettings.projectName },
-                    { "userId", CloudProjectSettings.userId },
-                    { "userName", CloudProjectSettings.userName },
-                    { "serviceType", "mgobe"}
+                _userInfo = new Dictionary<string, dynamic> { { "organizationId", CloudProjectSettings.organizationId },
+                { "organizationName", CloudProjectSettings.organizationName },
+                { "projectId", CloudProjectSettings.projectId },
+                { "projectName", CloudProjectSettings.projectName },
+                { "userId", CloudProjectSettings.userId },
+                { "userName", CloudProjectSettings.userName },
+                { "serviceType", "mgobe" }
                 };
             }
         }
 
         async public static void updateUserInfo () {
+#if HAS_CLOUDBASE
+
             CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
             AuthState state = await app.Auth.GetAuthStateAsync ();
 
@@ -47,6 +51,8 @@ namespace Packages.com.unity.mgobe.Editor {
 
             // 调用云函数
             FunctionResponse res = await app.Function.CallFunctionAsync ("updateUserInfo", _userInfo);
+#endif
+
         }
     }
 }

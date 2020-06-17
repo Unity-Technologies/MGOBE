@@ -2,12 +2,12 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using Google.Protobuf;
-using Lagame;
-using Packages.com.unity.mgobe.Runtime.src.Net;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.User {
+using com.unity.mgobe.src.Net;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
+
+namespace com.unity.mgobe.src.User {
     public class LoginPara {
         public LoginPara () {
             this.GameId = GameInfo.GameId;

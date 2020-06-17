@@ -1,9 +1,9 @@
 using System;
-using Packages.com.unity.mgobe.Runtime.src;
-using Packages.com.unity.mgobe.Runtime.src.SDK;
-using Lagame;
+using com.unity.mgobe.src;
+using com.unity.mgobe.src.SDK;
 
-namespace Packages.com.unity.mgobe.Runtime
+
+namespace com.unity.mgobe
 {
     public class Global
     {

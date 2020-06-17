@@ -1,4 +1,4 @@
-namespace Packages.com.unity.mgobe.Runtime.src.EventUploader
+namespace com.unity.mgobe.src.EventUploader
 {
     public static class Conf
     {

@@ -1,4 +1,4 @@
-namespace Packages.com.unity.mgobe.Runtime.src.Util.Def
+namespace com.unity.mgobe.src.Util.Def
 {
     public class SdkErrMsgEnum
     {

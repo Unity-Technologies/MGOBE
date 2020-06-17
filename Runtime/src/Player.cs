@@ -1,7 +1,7 @@
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Lagame;
+using com.unity.mgobe.src.Util;
 
-namespace Packages.com.unity.mgobe.Runtime.src
+
+namespace com.unity.mgobe.src
 {
     public class Player
     {

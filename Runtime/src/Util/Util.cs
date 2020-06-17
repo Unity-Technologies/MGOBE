@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using com.unity.cloudbase.Runtime;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+using com.unity.mgobe.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util {
+#if HAS_CLOUDBASE
+using com.unity.cloudbase.Runtime;
+#endif
+
+namespace com.unity.mgobe.src.Util {
     public static class SdkUtil {
         private static int _seqNum = 1;
         public static string GetSequenceStr () {
@@ -41,6 +44,8 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
         }
 
         async public static void UploadMgobeUserInfo (string gameId) {
+#if HAS_CLOUDBASE
+
             CloudBaseApp app = CloudBaseApp.Init ("59eb4700a3c34", 3000);
             AuthState state = await app.Auth.GetAuthStateAsync ();
             if (state == null) {
@@ -49,7 +54,7 @@ namespace Packages.com.unity.mgobe.Runtime.src.Util {
             }
             // 调用云函数
             FunctionResponse res = await app.Function.CallFunctionAsync ("uploadServiceUser", new Dictionary<string, dynamic> { { "gameId", gameId }, { "serviceType", "mgobe" } });
+#endif
         }
-
     }
 }

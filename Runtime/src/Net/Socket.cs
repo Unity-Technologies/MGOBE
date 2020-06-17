@@ -2,10 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Packages.com.unity.mgobe.Runtime.src.Util;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+using com.unity.mgobe.src.Util;
+using com.unity.mgobe.src.Util.Def;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net {
+namespace com.unity.mgobe.src.Net {
     public class SocketEvent {
         public Action callback;
         public SocketEvent () { }

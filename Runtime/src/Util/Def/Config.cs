@@ -1,7 +1,7 @@
 using System;
-using Lagame;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Util.Def
+
+namespace com.unity.mgobe.src.Util.Def
 {
     [Serializable]
     public static class Config

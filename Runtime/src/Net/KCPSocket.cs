@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using Packages.com.unity.mgobe.Runtime.src.Net.Kcp;
-using Packages.com.unity.mgobe.Runtime.src.Util.Def;
+using com.unity.mgobe.src.Net.Kcp;
+using com.unity.mgobe.src.Util.Def;
 using WebSocketSharp;
-using Timer = Packages.com.unity.mgobe.Runtime.src.Util.Timer;
-using Debugger = Packages.com.unity.mgobe.Runtime.src.Util.Debugger; // using System.IO;
+using Timer = com.unity.mgobe.src.Util.Timer;
+using Debugger = com.unity.mgobe.src.Util.Debugger; // using System.IO;
 
-namespace Packages.com.unity.mgobe.Runtime.src.Net {
+namespace com.unity.mgobe.src.Net {
 
     public abstract class SocketTask {
         public const int Connecting = 0;
