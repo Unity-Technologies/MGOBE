@@ -17,7 +17,7 @@ namespace com.unity.mgobe.Editor {
     [ExecuteInEditMode, InitializeOnLoad]
     internal class TcbClient {
         // private static UserInfo _userInfo;
-        private static Dictionary<string, dynamic> _userInfo;
+        private static Dictionary<string, dynamic> _userInfo; 
         static TcbClient () {
             EditorApplication.update += InitUserInfo;
         }
