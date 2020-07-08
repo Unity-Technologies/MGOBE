@@ -1,15 +1,19 @@
 {
-	"category": "ConnectGame/Unity", 
-		"keywords": [
-			"mgobe", 
-			"unity"
-		], 
+	"category": "ConnectGame/Unity",
+	"keywords": [
+		"mgobe",
+		"unity"
+	],
 	"name": "com.unity.mgobe",
 	"displayName": "MGOBE",
-	"version": "1.0.5-preview",
+	"version": "1.0.6-preview",
 	"unity": "2018.4",
-	"description": "Unity Mgobe is a lightweight multiplayer online game engine. With limited coding, developers can quickly build games which needs frame synchronization or state synchronization.", 
+	"description": "Unity Mgobe is a lightweight multiplayer online game engine. With limited coding, developers can quickly build games which needs frame synchronization or state synchronization.",
 	"dependencies": {
 		"com.unity.cloudbase": "1.0.4-preview"
+	},
+	"mgobe_version": {
+		"version": "1.2.6.1",
+		"date": "2020.06.02"
 	}
 }
