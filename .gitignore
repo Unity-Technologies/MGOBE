@@ -28,5 +28,5 @@ CS_beacon.md
 
 node_modules/
 SampleCode/
-CloudBase.*
+# CloudBase.*
 Dev.md
