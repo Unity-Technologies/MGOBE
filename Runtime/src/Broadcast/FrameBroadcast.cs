@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using com.unity.mgobe;
 using com.unity.mgobe.src.Util;
 using com.unity.mgobe.src.Util.Def;
 using com.unity.mgobe.src.EventUploader;
@@ -112,7 +113,7 @@ namespace com.unity.mgobe.src.Broadcast
             var frameId = 0;
             if (bst.Frame != null)
             {
-                frameId = (int) bst.Frame.Id;
+                frameId = (int)bst.Frame.Id;
             }
             if (frameId <= this._frameIdSent)
             {
@@ -121,9 +122,12 @@ namespace com.unity.mgobe.src.Broadcast
             }
 
             if (bst.Frame == null) return;
-            try {
+            try
+            {
                 bst.Frame.Time = this._timer.Time(frameId);
-            }  catch ( Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debugger.Log(e.ToString());
             }
             this._frameIdSent = frameId;
@@ -161,7 +165,11 @@ namespace com.unity.mgobe.src.Broadcast
                 _fillCache.Remove(beginFrameId);
                 foreach (var item in cache.Frames)
                 {
-                    this.Send(new BroadcastEvent(item, ""));
+                    var bst = new RecvFrameBst
+                    {
+                        Frame = item,
+                    };
+                    this.Send(new BroadcastEvent(bst, ""));
                 }
 
                 beginFrameId = cache.EndFrameId + 1;
@@ -215,6 +223,12 @@ namespace com.unity.mgobe.src.Broadcast
                     this.FillSend(beginFrameId);
                 }
             };
+            RequestFramePara frameParam = new RequestFramePara
+            {
+                BeginFrameId = beginFrameId + 0,
+                EndFrameId = endFrameId + 0,
+            };
+            room.RequestFrame(frameParam, callback);
         }
     }
 
