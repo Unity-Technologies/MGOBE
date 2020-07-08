@@ -28,5 +28,6 @@ CS_beacon.md
 
 node_modules/
 SampleCode/
-# CloudBase.*
+CloudBase.*
+Newtonsoft.Json.*
 Dev.md
