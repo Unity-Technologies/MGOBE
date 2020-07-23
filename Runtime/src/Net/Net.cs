@@ -173,6 +173,9 @@ namespace com.unity.mgobe.src.Net {
 
         // 清空该实例对象的消息队列
         public void ClearQueue () {
+            foreach(var seq in this._queue){
+                SendQueue.Remove(seq);
+            }
             this._queue.Clear ();
         }
 

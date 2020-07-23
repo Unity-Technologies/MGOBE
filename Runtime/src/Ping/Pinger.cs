@@ -72,6 +72,7 @@ namespace com.unity.mgobe.src.Ping {
 
             if (!send) {
                 this.HandlePongTimeout (res.RspWrap1.Seq);
+                return;
             }
 
             this.Retry = MaxPingRetry;

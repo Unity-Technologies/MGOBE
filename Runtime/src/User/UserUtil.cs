@@ -43,7 +43,12 @@ namespace com.unity.mgobe.src.User
 
         private static void LoginRsp(ResponseEvent e)
         {
-            if (!SdkStatus.IsIniting()) return;
+            if (!SdkStatus.IsIniting()) {
+                if(e.Code == ErrCode.EcOk) {
+                    Core.Pinger1.Ping(null);
+                } 
+                return;  
+            }
             ResponseEvent eve;
             if (e.Code != ErrCode.EcOk)
             {

@@ -12,7 +12,7 @@ namespace com.unity.mgobe
         public static string Name => GamePlayerInfo.GetInfo().Name;
 
         public static string TeamId => GamePlayerInfo.GetInfo().TeamId;
-        public ulong CustomPlayerStatus => GamePlayerInfo.GetInfo().CustomPlayerStatus;
+        public static ulong CustomPlayerStatus => GamePlayerInfo.GetInfo().CustomPlayerStatus;
 
         public static string CustomProfile => GamePlayerInfo.GetInfo().CustomProfile;
 

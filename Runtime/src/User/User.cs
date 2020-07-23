@@ -100,7 +100,9 @@ namespace com.unity.mgobe.src.User {
             }
             var rspWrap1 = res.RspWrap1;
             var rsp = new LoginRsp ();
-            rsp.MergeFrom (res.Body);
+            if(res.Body != null) {
+                rsp.MergeFrom(res.Body);
+            } 
             var eve = new ResponseEvent (rspWrap1.ErrCode, rspWrap1.ErrMsg, rspWrap1.Seq, rsp);
             NetClient.HandleSuccess (eve.Code, () => {
                 if (eve.Code == ErrCode.EcOk) {
