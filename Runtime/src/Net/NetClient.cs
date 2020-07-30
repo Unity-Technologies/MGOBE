@@ -80,7 +80,8 @@ namespace com.unity.mgobe.src.Net {
             var data = Pb.EncodeReq (qAppRequest, accessReq, body);
 
             if (data.Length > _maxDataLength) {
-                var val = SendQueue.ContainsKey (seq) ? SendQueue[seq] : null;
+                SendQueueValue val = null;
+                SendQueue.TryGetValue(seq + "", out val);
                 var timer = new Timer ();
                 timer.SetTimeout (() => {
                     if (val != null) val.sendFail ((int) QAppProtoErrCode.EcSdkSendFail, "数据长度超限");
@@ -103,7 +104,8 @@ namespace com.unity.mgobe.src.Net {
                 var rsp = Pb.DecodeRsp (body);
                 var seq = rsp.RspWrap1.Seq;
 
-                var val = SendQueue.ContainsKey (seq) ? SendQueue[seq] : null;
+                SendQueueValue val = null;
+                SendQueue.TryGetValue(seq + "", out val);
 
                 var callback = val?.response;
 

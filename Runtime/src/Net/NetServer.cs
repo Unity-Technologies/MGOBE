@@ -22,7 +22,8 @@ namespace com.unity.mgobe.src.Net
         {
             var bst = Pb.DecodeBst(body);
 
-            var handler = BroadcastHandlers[bst.BstWrap2.Type];
+            BroadcastCallback handler = null;
+            BroadcastHandlers.TryGetValue(bst.BstWrap2.Type, out handler);
 
             handler?.Invoke(bst, bst.BstWrap1.Seq);
         }
@@ -35,8 +36,8 @@ namespace com.unity.mgobe.src.Net
         // 设置广播回调
         public void SetBroadcastHandler(ServerSendClientBstWrap2Type type, BroadcastCallback handler)
         {
-            BroadcastHandlers.Add(type, handler);
-            bdhandlers.Add(type);
+            BroadcastHandlers.TryAdd(type, handler);
+            bdhandlers.TryAdd(type, null);
         }
 
     }

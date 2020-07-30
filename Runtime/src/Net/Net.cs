@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-
 using com.unity.mgobe.src.Net.Sockets;
 using com.unity.mgobe.src.Util;
 using com.unity.mgobe.src.Util.Def; // using System.Timers;
-
 
 namespace com.unity.mgobe.src.Net {
     public struct MessageWrapper {
@@ -48,13 +46,14 @@ namespace com.unity.mgobe.src.Net {
     // public delegate void EventHandler(object sender, SocketEvent e, Action<byte[]> handleResponse);
 
     public class Net : IDisposable {
-        protected static readonly Dictionary<string, SendQueueValue> SendQueue = new Dictionary<string, SendQueueValue> ();
-        protected static readonly Dictionary<ServerSendClientBstWrap2Type, BroadcastCallback> BroadcastHandlers = new Dictionary<ServerSendClientBstWrap2Type, BroadcastCallback> ();
-        private static readonly Timer Timer = new Timer ();
+        protected static readonly ConcurrentDictionary<string, SendQueueValue> SendQueue = new ConcurrentDictionary<string, SendQueueValue> ();
+        protected static readonly ConcurrentDictionary<ServerSendClientBstWrap2Type, BroadcastCallback> BroadcastHandlers = new ConcurrentDictionary<ServerSendClientBstWrap2Type, BroadcastCallback> ();
+        private static readonly Timer ResendTimer = new Timer ();
+        private static readonly Timer TimeoutTimer = new Timer ();
 
-        protected readonly HashSet<ServerSendClientBstWrap2Type> bdhandlers = new HashSet<ServerSendClientBstWrap2Type> ();
+        protected readonly ConcurrentDictionary<ServerSendClientBstWrap2Type, Object> bdhandlers = new ConcurrentDictionary<ServerSendClientBstWrap2Type, Object> ();
         // 该实例对象的发送队列
-        private readonly HashSet<string> _queue;
+        private readonly ConcurrentDictionary<string, Object> _queue;
         // public KCPSocket socket;
         // private QAppProtoErrCode ErrCode;
         private Action<byte[]> _handleResponse;
@@ -64,10 +63,18 @@ namespace com.unity.mgobe.src.Net {
 
         // 循环检测 sendQueue 中的消息发送
         public static void StartQueueLoop () {
-            Timer.SetTimer (CheckSendQueue, Config.ResendInterval);
+            ResendTimer.SetTimer (CheckSendQueue, Config.ResendInterval);
         }
 
         private static readonly Action CheckSendQueue = () => {
+            foreach (var val in SendQueue.Select (kv => kv.Value)) {
+                if (!val.IsSocketSend && DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendInterval) {
+                    val.resend ();
+                }
+            }
+        };
+
+        private static readonly Action CheckSendQueueTimeout = () => {
             foreach (var val in SendQueue.Select (kv => kv.Value)) {
                 if (DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout) {
                     int code;
@@ -84,18 +91,14 @@ namespace com.unity.mgobe.src.Net {
                         }
                     }
                     val.sendFail (code, msg);
-                } else {
-                    if (!val.IsSocketSend && DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendInterval) {
-                        // Debugger.Log("<<<<<<<<<<<<<< resend {0}", DateTime.Now.Subtract(val.time).TotalMilliseconds);
-                        val.resend ();
-                    }
                 }
             }
         };
 
         // 停止检测消息发送, 清空全部消息
         public static void StopQueueLoop () {
-            Timer.Stop ();
+            TimeoutTimer.Stop ();
+            ResendTimer.Stop ();
             foreach (var val in SendQueue.Select (kv => kv.Value)) {
                 val.remove ();
             }
@@ -104,7 +107,7 @@ namespace com.unity.mgobe.src.Net {
 
         protected Net () {
             Socket = null;
-            _queue = new HashSet<string> ();
+            _queue = new ConcurrentDictionary<string, Object> ();
         }
 
         // 绑定 socket 对象
@@ -173,38 +176,42 @@ namespace com.unity.mgobe.src.Net {
 
         // 清空该实例对象的消息队列
         public void ClearQueue () {
-            foreach(var seq in this._queue){
-                SendQueue.Remove(seq);
+            var keys = this._queue.Keys;
+
+            foreach (var seq in keys) {
+                SendQueue.TryRemove (seq, out SendQueueValue s);
             }
+
             this._queue.Clear ();
         }
 
         // 清空该实例对象的广播回调
         private void ClearBdHandlers () {
-            foreach (var type in bdhandlers) {
-                BroadcastHandlers.Remove (type);
-                // bdhandlers.Remove(type);
+            var keys = this.bdhandlers.Keys;
+
+            foreach (var type in keys) {
+                BroadcastHandlers.TryRemove (type, out BroadcastCallback s);
             }
+
             bdhandlers.Clear ();
         }
 
         // 向请求队列中添加记录
         protected void AddSendQueue (string seq, SendQueueValue value) {
-            // Debugger.Log("Add Send queue.");
-            SendQueue.Add (seq, value);
-            this._queue.Add (seq);
+            SendQueue.TryAdd (seq, value);
+            this._queue.TryAdd (seq, null);
         }
 
         // 在请求队列中删除记录
         public void DeleteSendQueue (string seq) {
-            SendQueue.Remove (seq);
-            this._queue.Remove (seq);
+            SendQueue.TryRemove (seq, out SendQueueValue s);
+            this._queue.TryRemove (seq, out Object q);
         }
 
         // 设置广播回调
         private void SetBroadcastHandler (ServerSendClientBstWrap2Type type, BroadcastCallback callback) {
-            Net.BroadcastHandlers.Add (type, callback);
-            bdhandlers.Add (type);
+            Net.BroadcastHandlers.TryAdd (type, callback);
+            bdhandlers.TryAdd (type, null);
         }
 
         // 处理请求的响应错误码
@@ -231,7 +238,8 @@ namespace com.unity.mgobe.src.Net {
 
         // 发送失败 Callback
         private void HandleSendFail (string seq, int code) {
-            var val = SendQueue[seq];
+            SendQueueValue val = null;
+            SendQueue.TryGetValue (seq + "", out val);
             if (val == null) return;
 
             // 处理 wssocket 帧长度超过 856B
@@ -261,8 +269,9 @@ namespace com.unity.mgobe.src.Net {
 
         // 发送成功 Callback
         private static void HandleSendSuccess (string seq) {
-            if (seq == "" || SendQueue[seq] == null) return;
-            var val = SendQueue[seq];
+            SendQueueValue val = null;
+            SendQueue.TryGetValue (seq + "", out val);
+            if (seq == "" || val == null) return;
             val.sendSuccess ();
         }
 

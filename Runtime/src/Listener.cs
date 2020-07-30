@@ -22,7 +22,7 @@ namespace com.unity.mgobe
             Sdk.Instance = new Sdk(gameInfo, config);
             Sdk.Instance.Init(callback);
             // 绑定全局广播
-		    Sdk.Instance.BindResponse(GlobalRoomBroadcast.Instance);
+            Sdk.Instance.BindResponse(GlobalRoomBroadcast.Instance);
         }
 
         public static bool IsMe(string playerId)
@@ -32,7 +32,7 @@ namespace com.unity.mgobe
 
         public static bool IsInited()
         {
-            return Sdk.Instance.IsInited();
+            return Sdk.Instance != null ? Sdk.Instance.IsInited() : false;
         }
 
         // Sdk Room 实例添加广播监听
