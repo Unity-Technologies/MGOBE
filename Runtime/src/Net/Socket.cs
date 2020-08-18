@@ -41,7 +41,7 @@ namespace com.unity.mgobe.src.Net {
 
             public bool ForceClose { get; set; } = false;
 
-            public readonly Timer ReconnectTimer = new Util.Timer ();
+            public readonly Timer ReconnectTimer  = new Util.Timer ();
 
             public int ReconnectTimes { get; set; }
 
@@ -113,7 +113,6 @@ namespace com.unity.mgobe.src.Net {
                 // 强关
                 this.ForceClose = true;
                 if (_socketTask == null) {
-                    Debugger.Log ("socket task == null, return");
                     success?.Invoke ();
                     EmitCloseStatus ();
                     return;
@@ -123,7 +122,6 @@ namespace com.unity.mgobe.src.Net {
                     // Success Action
                     () => {
                         this._socketTask = null;
-                        Debugger.Log ("socket task close success");
                         success?.Invoke ();
                     },
                     // Fail Action
@@ -151,7 +149,7 @@ namespace com.unity.mgobe.src.Net {
             private void HandleSocketClose () {
                 EmitCloseStatus ();
 
-                ReconnectTimer.SetTimer (() => OpenSocketTask ("close"), Config.ReconnectInterval);
+                ReconnectTimer.SetTimer(() => OpenSocketTask("close"), Config.ReconnectInterval);
 
                 if (!this.ForceClose) return;
                 ReconnectTimes = 0;
@@ -172,7 +170,7 @@ namespace com.unity.mgobe.src.Net {
                     Data = errMsg.Data
                 };
                 Emit ("connectError", eve);
-                ReconnectTimer.SetTimer (() => OpenSocketTask ("error"), Config.ReconnectInterval);
+                ReconnectTimer.SetTimer(() => OpenSocketTask("error"), Config.ReconnectInterval);
 
             }
 
@@ -237,7 +235,6 @@ namespace com.unity.mgobe.src.Net {
             }
 
             private void EmitCloseStatus () {
-                Debugger.Log ("emit close status");
                 Emit ("connectClose", new SocketEvent ("socket is closed"));
             }
 

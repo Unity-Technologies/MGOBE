@@ -2,9 +2,11 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+
 using com.unity.mgobe.src.Net.Sockets;
 using com.unity.mgobe.src.Util;
 using com.unity.mgobe.src.Util.Def; // using System.Timers;
+
 
 namespace com.unity.mgobe.src.Net {
     public struct MessageWrapper {
@@ -48,8 +50,7 @@ namespace com.unity.mgobe.src.Net {
     public class Net : IDisposable {
         protected static readonly ConcurrentDictionary<string, SendQueueValue> SendQueue = new ConcurrentDictionary<string, SendQueueValue> ();
         protected static readonly ConcurrentDictionary<ServerSendClientBstWrap2Type, BroadcastCallback> BroadcastHandlers = new ConcurrentDictionary<ServerSendClientBstWrap2Type, BroadcastCallback> ();
-        private static readonly Timer ResendTimer = new Timer ();
-        private static readonly Timer TimeoutTimer = new Timer ();
+        private static readonly Timer Timer = new Timer ();
 
         protected readonly ConcurrentDictionary<ServerSendClientBstWrap2Type, Object> bdhandlers = new ConcurrentDictionary<ServerSendClientBstWrap2Type, Object> ();
         // 该实例对象的发送队列
@@ -63,18 +64,10 @@ namespace com.unity.mgobe.src.Net {
 
         // 循环检测 sendQueue 中的消息发送
         public static void StartQueueLoop () {
-            ResendTimer.SetTimer (CheckSendQueue, Config.ResendInterval);
+            Timer.SetTimer (CheckSendQueue, Config.ResendInterval);
         }
 
         private static readonly Action CheckSendQueue = () => {
-            foreach (var val in SendQueue.Select (kv => kv.Value)) {
-                if (!val.IsSocketSend && DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendInterval) {
-                    val.resend ();
-                }
-            }
-        };
-
-        private static readonly Action CheckSendQueueTimeout = () => {
             foreach (var val in SendQueue.Select (kv => kv.Value)) {
                 if (DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendTimeout) {
                     int code;
@@ -91,14 +84,17 @@ namespace com.unity.mgobe.src.Net {
                         }
                     }
                     val.sendFail (code, msg);
+                } else {
+                    if (!val.IsSocketSend && DateTime.Now.Subtract (val.Time).TotalMilliseconds > Config.ResendInterval) {
+                        val.resend ();
+                    }
                 }
             }
         };
 
         // 停止检测消息发送, 清空全部消息
         public static void StopQueueLoop () {
-            TimeoutTimer.Stop ();
-            ResendTimer.Stop ();
+            Timer.Stop ();
             foreach (var val in SendQueue.Select (kv => kv.Value)) {
                 val.remove ();
             }
@@ -175,20 +171,22 @@ namespace com.unity.mgobe.src.Net {
         }
 
         // 清空该实例对象的消息队列
-        public void ClearQueue () {
+        public void ClearQueue ()
+        {
             var keys = this._queue.Keys;
 
-            foreach (var seq in keys) {
-                SendQueue.TryRemove (seq, out SendQueueValue s);
+            foreach (var seq in keys)
+            {
+                SendQueue.TryRemove(seq, out SendQueueValue s);
             }
-
+            
             this._queue.Clear ();
         }
 
         // 清空该实例对象的广播回调
         private void ClearBdHandlers () {
             var keys = this.bdhandlers.Keys;
-
+            
             foreach (var type in keys) {
                 BroadcastHandlers.TryRemove (type, out BroadcastCallback s);
             }
@@ -199,13 +197,13 @@ namespace com.unity.mgobe.src.Net {
         // 向请求队列中添加记录
         protected void AddSendQueue (string seq, SendQueueValue value) {
             SendQueue.TryAdd (seq, value);
-            this._queue.TryAdd (seq, null);
+            this._queue.TryAdd(seq, null);
         }
 
         // 在请求队列中删除记录
         public void DeleteSendQueue (string seq) {
             SendQueue.TryRemove (seq, out SendQueueValue s);
-            this._queue.TryRemove (seq, out Object q);
+            this._queue.TryRemove(seq, out Object q);
         }
 
         // 设置广播回调
@@ -237,9 +235,10 @@ namespace com.unity.mgobe.src.Net {
         }
 
         // 发送失败 Callback
-        private void HandleSendFail (string seq, int code) {
+        private void HandleSendFail (string seq, int code)
+        {
             SendQueueValue val = null;
-            SendQueue.TryGetValue (seq + "", out val);
+            SendQueue.TryGetValue(seq + "", out val);
             if (val == null) return;
 
             // 处理 wssocket 帧长度超过 856B
@@ -268,9 +267,10 @@ namespace com.unity.mgobe.src.Net {
         }
 
         // 发送成功 Callback
-        private static void HandleSendSuccess (string seq) {
+        private static void HandleSendSuccess (string seq)
+        {
             SendQueueValue val = null;
-            SendQueue.TryGetValue (seq + "", out val);
+            SendQueue.TryGetValue(seq + "", out val);
             if (seq == "" || val == null) return;
             val.sendSuccess ();
         }
@@ -279,7 +279,7 @@ namespace com.unity.mgobe.src.Net {
             if (!SdkStatus.IsInited () && subcmd != ProtoCmd.ECmdLoginReq) {
                 // 发送失败: 没有初始化 (login不需要初始化)
                 var info = new PlayerInfo {
-                Id = ""
+                    Id = ""
                 };
                 GamePlayerInfo.SetInfo (info);
                 UserStatus.SetStatus (UserStatus.StatusType.Logout);

@@ -19,7 +19,7 @@ namespace com.unity.mgobe
         /// <param name="callback"> 初始化回调函数 </param>
         public static void Init(GameInfoPara gameInfo, ConfigPara config, Action<ResponseEvent> callback)
         {
-            Sdk.Instance = new Sdk(gameInfo, config);
+            if (Sdk.Instance == null) Sdk.Instance = new Sdk(gameInfo, config);
             Sdk.Instance.Init(callback);
             // 绑定全局广播
             Sdk.Instance.BindResponse(GlobalRoomBroadcast.Instance);

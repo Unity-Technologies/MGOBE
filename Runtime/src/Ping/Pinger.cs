@@ -90,11 +90,13 @@ namespace com.unity.mgobe.src.Ping {
             if (IsTokenError (errCode)) {
                 UserStatus.SetStatus (UserStatus.StatusType.Logout);
                 this.client.Socket.Emit ("autoAuth", new SocketEvent ());
+                return;
             }
 
             if (IsRelayConnectError (errCode) && this.client.Socket.Id == (int) ConnectionType.Relay) {
                 CheckLoginStatus.SetStatus (CheckLoginStatus.StatusType.Offline);
                 this.client.Socket.Emit ("autoAuth", new SocketEvent ());
+                return;
             }
 
             this.PingTimer.SetTimer (() => this.Ping (null), this.Timeout);
@@ -118,8 +120,8 @@ namespace com.unity.mgobe.src.Ping {
                     this.Retry = MaxPingRetry;
                 }
             }
-            this.client.Socket.ConnectNewSocketTask (this.client.Socket.Url);
             this.client.ClearQueue ();
+            this.client.Socket.ConnectNewSocketTask (this.client.Socket.Url);
         }
 
         private static bool IsTokenError (int code) {
@@ -130,7 +132,7 @@ namespace com.unity.mgobe.src.Ping {
         }
 
         private static bool IsRelayConnectError (int code) {
-            return code == ErrCode.EcAccessGetCommConnectErr;
+            return code == ErrCode.EcAccessGetRelayConnectErr;
         }
     }
 }

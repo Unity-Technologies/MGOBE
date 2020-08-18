@@ -174,42 +174,36 @@ namespace com.unity.mgobe.src
             Socket1.OnEvent("autoAuth", (SocketEvent socketEvent) =>
             {
                 if (!SdkStatus.IsInited()) return;
-                var timer = new Timer();
-                timer.SetTimeout(() =>
+                
+                var isLogout = UserStatus.IsStatus(UserStatus.StatusType.Logout);
+                if (!string.IsNullOrEmpty(Socket1.Url) && isLogout)
                 {
-                    var isLogout = UserStatus.IsStatus(UserStatus.StatusType.Logout);
-                    if (!string.IsNullOrEmpty(Socket1.Url) && isLogout)
-                    {
-                        UserUtil.Login(null);
-                    };
-                }, 1000);
+                    UserUtil.Login(null);
+                };
             });
             Socket2.OnEvent("autoAuth", (SocketEvent socketEvent) =>
             {
                 if (!SdkStatus.IsInited()) return;
                 if (string.IsNullOrEmpty(Socket2.Url)) return;
-                var timer = new Timer();
-                timer.SetTimeout(() =>
+                
+                // Debugger.Log("auto auth check 1");
+                // 检查是否需要重登录
+                if (UserStatus.IsStatus(UserStatus.StatusType.Logout)) UserUtil.Login(null);
+
+                // 检查是否需要 checkLogin
+                var info = FrameSender.RoomInfo ?? new RoomInfo { RouteId = "" };
+                // Debugger.Log("auto auth check 2: {0}", CheckLoginStatus.GetRouteId() != info.RouteId);
+
+                if (CheckLoginStatus.IsOffline() || CheckLoginStatus.GetRouteId() != info.RouteId)
                 {
-                    // Debugger.Log("auto auth check 1");
-                    // 检查是否需要重登录
-                    if (UserStatus.IsStatus(UserStatus.StatusType.Logout)) UserUtil.Login(null);
-
-                    // 检查是否需要 checkLogin
-                    var info = FrameSender.RoomInfo ?? new RoomInfo { RouteId = "" };
-                    // Debugger.Log("auto auth check 2: {0}", CheckLoginStatus.GetRouteId() != info.RouteId);
-
-                    if (CheckLoginStatus.IsOffline() || CheckLoginStatus.GetRouteId() != info.RouteId)
+                    FrameSender.CheckLogin((ResponseEvent eve) =>
                     {
-                        FrameSender.CheckLogin((ResponseEvent eve) =>
+                        if (eve.Code == ErrCode.EcOk)
                         {
-                            if (eve.Code == ErrCode.EcOk)
-                            {
-                                Pinger2.Ping(null);
-                            }
-                        }, "autoAuth");
-                    }
-                }, 1000);
+                            Pinger2.Ping(null);
+                        }
+                    }, "autoAuth");
+                }
             });
         }
 
